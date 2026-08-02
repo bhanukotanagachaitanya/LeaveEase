@@ -1,0 +1,321 @@
+{
+	"info": {
+		"_postman_id": "deb946a9-leave-mgmt-collection-2026",
+		"name": "Employee Leave Management System API",
+		"description": "Complete Postman collection for testing REST APIs of Employee Leave Management System.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register Employee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Alice Williams\",\n  \"employeeId\": \"EMP201\",\n  \"email\": \"alice@company.com\",\n  \"password\": \"Password123\",\n  \"department\": \"Software Engineering\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "Login Employee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"emailOrEmployeeId\": \"emp1@company.com\",\n  \"password\": \"Password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Login Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"emailOrEmployeeId\": \"admin@company.com\",\n  \"password\": \"Admin@123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/logout",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "logout"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Employee Endpoints",
+			"item": [
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/employee/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "employee", "profile"]
+						}
+					}
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Johnathan Doe\",\n  \"department\": \"Software Engineering\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/employee/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "employee", "profile"]
+						}
+					}
+				},
+				{
+					"name": "Apply Leave",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"leaveType\": \"Annual Leave\",\n  \"fromDate\": \"2026-08-10\",\n  \"toDate\": \"2026-08-14\",\n  \"reason\": \"Annual leave for personal downtime\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/leave",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "leave"]
+						}
+					}
+				},
+				{
+					"name": "Get Leave History",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/leave/history?status=All&page=1&limit=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "leave", "history"]
+						}
+					}
+				},
+				{
+					"name": "Cancel Pending Leave",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/leave/:leaveId",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "leave", ":leaveId"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Administrator Endpoints",
+			"item": [
+				{
+					"name": "Admin Dashboard Analytics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/dashboard",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "dashboard"]
+						}
+					}
+				},
+				{
+					"name": "Get All Leave Requests",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/leaves?status=All&page=1&limit=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "leaves"]
+						}
+					}
+				},
+				{
+					"name": "Approve Leave Request",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"remarks\": \"Approved by HR manager.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/approve/:leaveId",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "approve", ":leaveId"]
+						}
+					}
+				},
+				{
+					"name": "Reject Leave Request",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"remarks\": \"Insufficient leave balance or critical sprint deadline.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/reject/:leaveId",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "reject", ":leaveId"]
+						}
+					}
+				},
+				{
+					"name": "Get All Employees",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/employees?page=1&limit=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "employees"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000"
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "adminToken",
+			"value": ""
+		}
+	]
+}
