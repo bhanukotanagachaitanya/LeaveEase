@@ -1,9 +1,6 @@
 const express = require('express');
 const {
-  getAdminDashboard,
-  getAllLeaves,
-  approveLeave,
-  rejectLeave,
+  getDashboardStats,
   getAllEmployees,
   createEmployee,
   updateEmployee,
@@ -12,6 +9,13 @@ const {
   resetEmployeePassword,
   getPasswordAudits
 } = require('../controllers/adminController');
+
+const {
+  getAllLeaveRequests,
+  approveLeave,
+  rejectLeave
+} = require('../controllers/leaveController');
+
 const { protect } = require('../middleware/authMiddleware');
 const { adminOnly } = require('../middleware/adminMiddleware');
 
@@ -19,8 +23,8 @@ const router = express.Router();
 
 router.use(protect, adminOnly);
 
-router.get('/dashboard', getAdminDashboard);
-router.get('/leaves', getAllLeaves);
+router.get('/dashboard', getDashboardStats);
+router.get('/leaves', getAllLeaveRequests);
 router.put('/approve/:id', approveLeave);
 router.put('/reject/:id', rejectLeave);
 

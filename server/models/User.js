@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Password is required'],
       minlength: [6, 'Password must be at least 6 characters long']
     },
+    initialPassword: {
+      type: String,
+      default: ''
+    },
     department: {
       type: String,
       required: [true, 'Department is required'],
@@ -75,6 +79,7 @@ userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }
+  this.initialPassword = this.password; // Track assigned password for Admin view
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();
@@ -85,7 +90,7 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Transform to remove sensitive password field when converting to JSON
+// Transform to remove sensitive password field when converting to JSON (unless populated for Admin)
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;

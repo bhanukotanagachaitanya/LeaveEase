@@ -1,4 +1,5 @@
 const LeaveRequest = require('../models/LeaveRequest');
+const Notification = require('../models/Notification');
 const { successResponse, errorResponse } = require('../utils/responseHandler');
 
 /**
@@ -134,6 +135,120 @@ const getLeaveHistory = async (req, res, next) => {
 };
 
 /**
+ * @desc    Get all leave requests across organization (Admin feature)
+ * @route   GET /api/admin/leaves
+ * @access  Private (Admin)
+ */
+const getAllLeaveRequests = async (req, res, next) => {
+  try {
+    const { status, leaveType, search, page = 1, limit = 10 } = req.query;
+
+    let query = {};
+
+    if (status && status !== 'All') {
+      query.status = status;
+    }
+
+    if (leaveType && leaveType !== 'All') {
+      query.leaveType = leaveType;
+    }
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    let leaveRequests = await LeaveRequest.find(query)
+      .sort({ createdAt: -1 })
+      .populate('employeeId', 'name employeeId email department');
+
+    if (search) {
+      const searchRegex = new RegExp(search, 'i');
+      leaveRequests = leaveRequests.filter(l => 
+        (l.employeeId && (searchRegex.test(l.employeeId.name) || searchRegex.test(l.employeeId.employeeId))) ||
+        searchRegex.test(l.leaveType) ||
+        searchRegex.test(l.reason)
+      );
+    }
+
+    const totalCount = leaveRequests.length;
+    const paginatedRequests = leaveRequests.slice(skip, skip + parseInt(limit));
+
+    return successResponse(res, 200, 'All leave requests fetched', {
+      leaveRequests: paginatedRequests,
+      pagination: {
+        total: totalCount,
+        page: parseInt(page),
+        pages: Math.ceil(totalCount / parseInt(limit))
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Approve a leave request (Admin feature)
+ * @route   PUT /api/admin/approve/:id
+ * @access  Private (Admin)
+ */
+const approveLeave = async (req, res, next) => {
+  try {
+    const { remarks } = req.body;
+    const leave = await LeaveRequest.findById(req.params.id);
+
+    if (!leave) {
+      return errorResponse(res, 404, 'Leave request not found');
+    }
+
+    leave.status = 'Approved';
+    leave.approvedBy = req.user._id;
+    if (remarks) leave.remarks = remarks;
+    await leave.save();
+
+    await Notification.create({
+      userId: leave.employeeId,
+      title: 'Leave Request Approved',
+      message: `Your ${leave.leaveType} application from ${new Date(leave.fromDate).toDateString()} to ${new Date(leave.toDate).toDateString()} has been approved.`,
+      type: 'Leave'
+    });
+
+    return successResponse(res, 200, 'Leave request approved successfully', { leave });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Reject a leave request (Admin feature)
+ * @route   PUT /api/admin/reject/:id
+ * @access  Private (Admin)
+ */
+const rejectLeave = async (req, res, next) => {
+  try {
+    const { remarks } = req.body;
+    const leave = await LeaveRequest.findById(req.params.id);
+
+    if (!leave) {
+      return errorResponse(res, 404, 'Leave request not found');
+    }
+
+    leave.status = 'Rejected';
+    leave.approvedBy = req.user._id;
+    if (remarks) leave.remarks = remarks;
+    await leave.save();
+
+    await Notification.create({
+      userId: leave.employeeId,
+      title: 'Leave Request Rejected',
+      message: `Your ${leave.leaveType} application was rejected. ${remarks ? `Remarks: ${remarks}` : ''}`,
+      type: 'Leave'
+    });
+
+    return successResponse(res, 200, 'Leave request rejected', { leave });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * @desc    Cancel a pending leave request
  * @route   DELETE /api/leave/:id
  * @access  Private (Employee)
@@ -146,7 +261,6 @@ const cancelLeave = async (req, res, next) => {
       return errorResponse(res, 404, 'Leave request not found');
     }
 
-    // Verify ownership
     if (leave.employeeId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return errorResponse(res, 403, 'Forbidden: You can only cancel your own leave requests');
     }
@@ -167,5 +281,8 @@ const cancelLeave = async (req, res, next) => {
 module.exports = {
   applyLeave,
   getLeaveHistory,
+  getAllLeaveRequests,
+  approveLeave,
+  rejectLeave,
   cancelLeave
 };

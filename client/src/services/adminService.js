@@ -5,48 +5,52 @@ export const getAdminDashboard = async () => {
   return response.data;
 };
 
-export const getAllLeaves = async (params = {}) => {
-  const response = await api.get('/admin/leaves', { params });
-  return response.data;
-};
-
-export const approveLeave = async (leaveId, remarks = '') => {
-  const response = await api.put(`/admin/approve/${leaveId}`, { remarks });
-  return response.data;
-};
-
-export const rejectLeave = async (leaveId, remarks = '') => {
-  const response = await api.put(`/admin/reject/${leaveId}`, { remarks });
-  return response.data;
-};
-
 export const getAllEmployees = async (params = {}) => {
   const response = await api.get('/admin/employees', { params });
   return response.data;
 };
+
+export const getEmployees = getAllEmployees;
 
 export const createEmployee = async (employeeData) => {
   const response = await api.post('/admin/employees', employeeData);
   return response.data;
 };
 
-export const updateEmployee = async (employeeId, employeeData) => {
-  const response = await api.put(`/admin/employees/${employeeId}`, employeeData);
+export const updateEmployee = async (id, employeeData) => {
+  const response = await api.put(`/admin/employees/${id}`, employeeData);
   return response.data;
 };
 
-export const deleteEmployee = async (employeeId) => {
-  const response = await api.delete(`/admin/employees/${employeeId}`);
+export const toggleEmployeeStatus = async (id) => {
+  const response = await api.put(`/admin/employees/${id}/status`);
   return response.data;
 };
 
-export const toggleEmployeeStatus = async (employeeId) => {
-  const response = await api.put(`/admin/employees/${employeeId}/status`);
+export const resetEmployeePassword = async (id, newPassword) => {
+  const response = await api.put(`/admin/employees/${id}/reset-password`, { newPassword });
   return response.data;
 };
 
-export const resetEmployeePassword = async (employeeId, newPassword) => {
-  const response = await api.put(`/admin/employees/${employeeId}/reset-password`, { newPassword });
+export const deleteEmployee = async (id) => {
+  const response = await api.delete(`/admin/employees/${id}`);
+  return response.data;
+};
+
+export const getAllLeaveRequests = async (params = {}) => {
+  const response = await api.get('/admin/leaves', { params });
+  return response.data;
+};
+
+export const getAllLeaves = getAllLeaveRequests;
+
+export const approveLeave = async (id, remarks = '') => {
+  const response = await api.put(`/admin/approve/${id}`, { remarks });
+  return response.data;
+};
+
+export const rejectLeave = async (id, remarks = '') => {
+  const response = await api.put(`/admin/reject/${id}`, { remarks });
   return response.data;
 };
 
