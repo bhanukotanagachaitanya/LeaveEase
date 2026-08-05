@@ -6,6 +6,7 @@
     "server": "cd server && npm run dev",
     "client": "cd client && npm run dev",
     "seed": "cd server && npm run seed",
-    "build": "cd client && npm run build"
+    "build": "cd client && npm run build",
+    "push": "git add . && git commit -m \"Update LeaveEase project codebase\" && git push origin main"
   }
 }
