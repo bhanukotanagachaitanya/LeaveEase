@@ -118,7 +118,7 @@ const EmployeeDashboard = () => {
         </Link>
       </div>
 
-      {/* Dashboard Metric Stat Cards */}
+      {/* Dashboard Metric Stat Cards - Interactive Clickable Redirection */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <StatCard
           title="Total Requests"
@@ -126,6 +126,7 @@ const EmployeeDashboard = () => {
           icon={FileText}
           color="blue"
           subtitle="All leave submissions"
+          to="/leave-history?status=All"
         />
         <StatCard
           title="Pending Requests"
@@ -133,6 +134,7 @@ const EmployeeDashboard = () => {
           icon={Clock}
           color="amber"
           subtitle="Awaiting admin review"
+          to="/leave-history?status=Pending"
         />
         <StatCard
           title="Approved Leaves"
@@ -140,6 +142,7 @@ const EmployeeDashboard = () => {
           icon={CheckCircle2}
           color="emerald"
           subtitle="Granted leave requests"
+          to="/leave-history?status=Approved"
         />
         <StatCard
           title="Rejected Leaves"
@@ -147,17 +150,18 @@ const EmployeeDashboard = () => {
           icon={XCircle}
           color="rose"
           subtitle="Declined applications"
+          to="/leave-history?status=Rejected"
         />
       </div>
 
       {/* Grid Row: Upcoming Holidays & Recent Notifications */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Upcoming Holidays Widget */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200/80 shadow-subtle p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-subtle p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <CalendarDays className="w-5 h-5 text-brand-600" />
-              <h3 className="text-base font-bold text-slate-800">Upcoming Company Holidays</h3>
+              <h3 className="text-base font-bold text-slate-800 dark:text-white">Upcoming Company Holidays</h3>
             </div>
             <Link
               to="/holidays"
@@ -174,16 +178,16 @@ const EmployeeDashboard = () => {
               {upcomingHolidays.slice(0, 4).map((h) => (
                 <div
                   key={h._id}
-                  className="p-3.5 bg-slate-50 rounded-xl border border-slate-200/60 flex items-start justify-between"
+                  className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/60 dark:border-slate-700 flex items-start justify-between"
                 >
                   <div>
-                    <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-brand-100 text-brand-700">
+                    <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300">
                       {h.type}
                     </span>
-                    <h4 className="text-xs font-bold text-slate-900 mt-1">{h.name}</h4>
-                    <p className="text-[11px] text-slate-500">{h.occasion}</p>
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white mt-1">{h.name}</h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">{h.occasion}</p>
                   </div>
-                  <span className="text-[11px] font-semibold text-brand-700 flex items-center gap-1 whitespace-nowrap">
+                  <span className="text-[11px] font-semibold text-brand-700 dark:text-brand-400 flex items-center gap-1 whitespace-nowrap">
                     <CalendarIcon className="w-3 h-3" /> {formatDate(h.date)}
                   </span>
                 </div>
@@ -193,11 +197,11 @@ const EmployeeDashboard = () => {
         </div>
 
         {/* Notifications Widget */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-subtle p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-subtle p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <Bell className="w-5 h-5 text-brand-600" />
-              <h3 className="text-base font-bold text-slate-800">Recent Notifications</h3>
+              <h3 className="text-base font-bold text-slate-800 dark:text-white">Recent Notifications</h3>
             </div>
           </div>
 
@@ -206,12 +210,12 @@ const EmployeeDashboard = () => {
               <p className="text-xs text-slate-400 text-center py-4">No recent notifications.</p>
             ) : (
               notifications.slice(0, 4).map((n) => (
-                <div key={n._id} className="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
+                <div key={n._id} className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-900">{n.title}</span>
+                    <span className="text-xs font-bold text-slate-900 dark:text-white">{n.title}</span>
                     <span className="text-[10px] text-slate-400">{formatDate(n.createdAt)}</span>
                   </div>
-                  <p className="text-[11px] text-slate-600 leading-snug">{n.message}</p>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug">{n.message}</p>
                 </div>
               ))
             )}
@@ -220,10 +224,10 @@ const EmployeeDashboard = () => {
       </div>
 
       {/* Recent Leave Applications Table */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-subtle overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-subtle overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
           <div>
-            <h3 className="text-base font-bold text-slate-800">Recent Leave Applications</h3>
+            <h3 className="text-base font-bold text-slate-800 dark:text-white">Recent Leave Applications</h3>
             <p className="text-xs text-slate-500">Your latest submitted requests</p>
           </div>
           <Link
@@ -237,7 +241,7 @@ const EmployeeDashboard = () => {
         {recentLeaves.length === 0 ? (
           <div className="p-12 text-center">
             <CalendarPlus className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-            <h4 className="text-sm font-semibold text-slate-700">No Leave Requests Found</h4>
+            <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300">No Leave Requests Found</h4>
             <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
               You haven't submitted any leave applications yet. Click below to submit your first request.
             </p>
@@ -252,7 +256,7 @@ const EmployeeDashboard = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50/70 border-b border-slate-100 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                <tr className="bg-slate-50/70 dark:bg-slate-800/60 border-b border-slate-100 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   <th className="py-3.5 px-6">Leave Type</th>
                   <th className="py-3.5 px-6">Duration</th>
                   <th className="py-3.5 px-6">Days</th>
@@ -260,14 +264,14 @@ const EmployeeDashboard = () => {
                   <th className="py-3.5 px-6">Applied Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-xs font-medium text-slate-700">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300">
                 {recentLeaves.map((leave) => (
-                  <tr key={leave._id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="py-4 px-6 font-semibold text-slate-900">{leave.leaveType}</td>
+                  <tr key={leave._id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
+                    <td className="py-4 px-6 font-semibold text-slate-900 dark:text-white">{leave.leaveType}</td>
                     <td className="py-4 px-6">
                       {formatDate(leave.fromDate)} - {formatDate(leave.toDate)}
                     </td>
-                    <td className="py-4 px-6 font-semibold text-brand-700">{leave.totalDays} Days</td>
+                    <td className="py-4 px-6 font-semibold text-brand-700 dark:text-brand-400">{leave.totalDays} Days</td>
                     <td className="py-4 px-6">
                       <LeaveStatusBadge status={leave.status} />
                     </td>

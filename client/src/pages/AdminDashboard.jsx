@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { getAdminDashboard, approveLeave, rejectLeave } from '../services/adminService';
 import { useToast } from '../context/ToastContext';
 import StatCard from '../components/common/StatCard';
-import LeaveStatusBadge from '../components/leave/LeaveStatusBadge';
 import LeaveActionModal from '../components/leave/LeaveActionModal';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { formatDate } from '../utils/dateUtils';
@@ -17,8 +16,6 @@ import {
   ShieldCheck,
   Calendar,
   KeyRound,
-  UserCheck,
-  CalendarDays,
   PieChart
 } from 'lucide-react';
 
@@ -86,7 +83,6 @@ const AdminDashboard = () => {
 
   const recentRequests = data?.recentRequests || [];
   const pendingQueue = recentRequests.filter((r) => r.status === 'Pending');
-  const upcomingHolidays = data?.upcomingHolidays || [];
   const passwordAudits = data?.recentPasswordAudits || [];
   const leavesByType = data?.analytics?.leavesByType || [];
 
@@ -114,7 +110,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Admin Metric Cards */}
+      {/* Admin Metric Cards - Interactive Clickable Redirection */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <StatCard
           title="Total Employees"
@@ -122,6 +118,7 @@ const AdminDashboard = () => {
           icon={Users}
           color="indigo"
           subtitle={`${metrics.activeEmployees || 0} Active Staff`}
+          to="/admin/employees"
         />
         <StatCard
           title="Total Requests"
@@ -129,6 +126,7 @@ const AdminDashboard = () => {
           icon={FileCheck2}
           color="blue"
           subtitle="All leave applications"
+          to="/admin/leaves?status=All"
         />
         <StatCard
           title="Pending Requests"
@@ -136,6 +134,7 @@ const AdminDashboard = () => {
           icon={Clock}
           color="amber"
           subtitle="Requires admin decision"
+          to="/admin/leaves?status=Pending"
         />
         <StatCard
           title="Approved Leaves"
@@ -143,6 +142,7 @@ const AdminDashboard = () => {
           icon={CheckCircle2}
           color="emerald"
           subtitle="Granted applications"
+          to="/admin/leaves?status=Approved"
         />
         <StatCard
           title="Rejected Leaves"
@@ -150,17 +150,18 @@ const AdminDashboard = () => {
           icon={XCircle}
           color="rose"
           subtitle="Declined applications"
+          to="/admin/leaves?status=Rejected"
         />
       </div>
 
       {/* Grid Row 2: Category Bar Chart / Analytics & Password Audit Logs */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Leave Category Distribution */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200/80 shadow-subtle p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-subtle p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <PieChart className="w-5 h-5 text-brand-600" />
-              <h3 className="text-base font-bold text-slate-800">Leave Distribution by Category</h3>
+              <h3 className="text-base font-bold text-slate-800 dark:text-white">Leave Distribution by Category</h3>
             </div>
             <Link
               to="/admin/reports"
@@ -181,13 +182,13 @@ const AdminDashboard = () => {
                     : 0;
                 return (
                   <div key={item._id} className="space-y-1">
-                    <div className="flex justify-between text-xs font-bold text-slate-800">
+                    <div className="flex justify-between text-xs font-bold text-slate-800 dark:text-slate-200">
                       <span>{item._id}</span>
                       <span>
                         {item.count} Applications ({percentage}%)
                       </span>
                     </div>
-                    <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
                       <div
                         className="bg-brand-600 h-2.5 rounded-full transition-all duration-500"
                         style={{ width: `${percentage}%` }}
@@ -201,11 +202,11 @@ const AdminDashboard = () => {
         </div>
 
         {/* Password Audit Logs Preview Widget */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-subtle p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-subtle p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <KeyRound className="w-5 h-5 text-purple-600" />
-              <h3 className="text-base font-bold text-slate-800">Password Change Activity</h3>
+              <h3 className="text-base font-bold text-slate-800 dark:text-white">Password Change Activity</h3>
             </div>
             <Link
               to="/admin/password-audit"
@@ -220,12 +221,12 @@ const AdminDashboard = () => {
               <p className="text-xs text-slate-400 py-4 text-center">No password changes logged yet.</p>
             ) : (
               passwordAudits.slice(0, 4).map((audit) => (
-                <div key={audit._id} className="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
+                <div key={audit._id} className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-900">{audit.employeeName}</span>
+                    <span className="text-xs font-bold text-slate-900 dark:text-white">{audit.employeeName}</span>
                     <span className="text-[10px] text-slate-400 font-mono">{audit.employeeId}</span>
                   </div>
-                  <div className="flex items-center justify-between text-[11px] text-slate-600 pt-0.5">
+                  <div className="flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400 pt-0.5">
                     <span>By: <strong>{audit.changedBy}</strong></span>
                     <span className="text-[10px] text-slate-400">{formatDate(audit.createdAt)}</span>
                   </div>
@@ -237,12 +238,12 @@ const AdminDashboard = () => {
       </div>
 
       {/* Pending Approvals Section */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-subtle overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-subtle overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Clock className="w-5 h-5 text-amber-500" />
             <div>
-              <h3 className="text-base font-bold text-slate-800">Pending Review Queue</h3>
+              <h3 className="text-base font-bold text-slate-800 dark:text-white">Pending Review Queue</h3>
               <p className="text-xs text-slate-500">Leave applications waiting for administrator decision</p>
             </div>
           </div>
@@ -257,14 +258,14 @@ const AdminDashboard = () => {
         {pendingQueue.length === 0 ? (
           <div className="p-10 text-center">
             <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto mb-2" />
-            <p className="text-sm font-bold text-slate-800">No Pending Requests</p>
+            <p className="text-sm font-bold text-slate-800 dark:text-white">No Pending Requests</p>
             <p className="text-xs text-slate-500">All leave requests have been reviewed and processed.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50/70 border-b border-slate-100 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                <tr className="bg-slate-50/70 dark:bg-slate-800/60 border-b border-slate-100 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   <th className="py-3.5 px-6">Employee</th>
                   <th className="py-3.5 px-6">Department</th>
                   <th className="py-3.5 px-6">Leave Type</th>
@@ -273,17 +274,17 @@ const AdminDashboard = () => {
                   <th className="py-3.5 px-6 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-xs font-medium text-slate-700">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300">
                 {pendingQueue.map((leave) => (
-                  <tr key={leave._id} className="hover:bg-slate-50/60 transition-colors">
+                  <tr key={leave._id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
                     <td className="py-4 px-6">
-                      <div className="font-bold text-slate-900">{leave.employeeId?.name || 'N/A'}</div>
+                      <div className="font-bold text-slate-900 dark:text-white">{leave.employeeId?.name || 'N/A'}</div>
                       <span className="text-[10px] font-mono text-slate-400">{leave.employeeId?.employeeId}</span>
                     </td>
-                    <td className="py-4 px-6 text-slate-600">{leave.employeeId?.department || 'N/A'}</td>
-                    <td className="py-4 px-6 font-semibold text-brand-700">{leave.leaveType}</td>
+                    <td className="py-4 px-6 text-slate-600 dark:text-slate-400">{leave.employeeId?.department || 'N/A'}</td>
+                    <td className="py-4 px-6 font-semibold text-brand-700 dark:text-brand-400">{leave.leaveType}</td>
                     <td className="py-4 px-6">
-                      <div className="flex items-center gap-1 font-semibold text-slate-800">
+                      <div className="flex items-center gap-1 font-semibold text-slate-800 dark:text-slate-200">
                         <Calendar className="w-3.5 h-3.5 text-slate-400" />
                         <span>
                           {formatDate(leave.fromDate)} - {formatDate(leave.toDate)}
@@ -291,7 +292,7 @@ const AdminDashboard = () => {
                       </div>
                       <span className="text-[10px] text-slate-500 font-bold">{leave.totalDays} Days</span>
                     </td>
-                    <td className="py-4 px-6 max-w-xs truncate text-slate-600" title={leave.reason}>
+                    <td className="py-4 px-6 max-w-xs truncate text-slate-600 dark:text-slate-400" title={leave.reason}>
                       {leave.reason}
                     </td>
                     <td className="py-4 px-6 text-right">

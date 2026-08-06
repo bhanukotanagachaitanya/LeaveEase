@@ -1,61 +1,80 @@
-import React, { useEffect, useState } from 'react';
-import { getUserNotifications, markAsRead, markAllAsRead } from '../../services/notificationService';
-import { Bell, CheckCheck, Info, Calendar, Key, User, FileText } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { getUserNotifications, markNotificationAsRead } from '../../services/notificationService';
+import { Bell, Check, Sparkles, Calendar, Key, AlertCircle, ExternalLink } from 'lucide-react';
 import { formatDate } from '../../utils/dateUtils';
 
 const NotificationDropdown = () => {
+  const { isAdmin } = useAuth();
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
-  const fetchNotifications = async () => {
+  const fetchNotifs = async () => {
     try {
       const res = await getUserNotifications();
-      if (res.success) {
+      if (res.success && res.data) {
         setNotifications(res.data.notifications || []);
         setUnreadCount(res.data.unreadCount || 0);
       }
     } catch (err) {
-      console.error('Notification error:', err);
+      console.error(err);
     }
   };
 
   useEffect(() => {
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 30000); // Polling every 30s
+    fetchNotifs();
+    const interval = setInterval(fetchNotifs, 15000); // Poll every 15s for new notifications
     return () => clearInterval(interval);
   }, []);
 
-  const handleMarkRead = async (id) => {
+  const handleNotificationClick = async (notif) => {
     try {
-      await markAsRead(id);
-      fetchNotifications();
+      if (!notif.isRead) {
+        await markNotificationAsRead(notif._id);
+        fetchNotifs();
+      }
     } catch (err) {
       console.error(err);
     }
-  };
 
-  const handleMarkAllRead = async () => {
-    try {
-      await markAllAsRead();
-      fetchNotifications();
-    } catch (err) {
-      console.error(err);
+    setIsOpen(false);
+
+    // Dynamic Navigation based on Notification Type & User Role
+    switch (notif.type) {
+      case 'Leave':
+        navigate(isAdmin ? '/admin/leaves' : '/leave-history');
+        break;
+      case 'Password':
+        navigate(isAdmin ? '/admin/password-requests' : '/profile');
+        break;
+      case 'Holiday':
+        navigate(isAdmin ? '/admin/holidays' : '/holidays');
+        break;
+      case 'Account':
+        navigate(isAdmin ? '/admin/employees' : '/profile');
+        break;
+      case 'System':
+        navigate(isAdmin ? '/admin/dashboard' : '/dashboard');
+        break;
+      default:
+        navigate(isAdmin ? '/admin/dashboard' : '/dashboard');
+        break;
     }
   };
 
-  const getTypeIcon = (type) => {
+  const getIcon = (type) => {
     switch (type) {
       case 'Holiday':
-        return <Calendar className="w-4 h-4 text-emerald-500" />;
-      case 'Password':
-        return <Key className="w-4 h-4 text-amber-500" />;
+        return <Sparkles className="w-4 h-4 text-amber-500" />;
       case 'Leave':
-        return <FileText className="w-4 h-4 text-brand-500" />;
-      case 'Employee':
-        return <User className="w-4 h-4 text-purple-500" />;
+        return <Calendar className="w-4 h-4 text-brand-600" />;
+      case 'Password':
+        return <Key className="w-4 h-4 text-purple-600" />;
       default:
-        return <Info className="w-4 h-4 text-blue-500" />;
+        return <AlertCircle className="w-4 h-4 text-blue-500" />;
     }
   };
 
@@ -63,70 +82,62 @@ const NotificationDropdown = () => {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 rounded-xl text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none"
-        title="Notification Center"
+        className="p-2 rounded-xl text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors relative focus:outline-none"
+        title="Notifications"
       >
         <Bell className="w-5 h-5" />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center shadow-xs animate-pulse">
+          <span className="absolute top-1 right-1 w-4 h-4 bg-rose-500 text-white rounded-full text-[10px] font-bold flex items-center justify-center animate-pulse">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div
-          className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-100 py-2 z-50 animate-fade-in"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Header */}
-          <div className="px-4 py-2.5 border-b border-slate-100 flex items-center justify-between">
+        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 py-2 z-50 animate-fade-in">
+          <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Bell className="w-4 h-4 text-brand-600" />
-              <h4 className="text-xs font-bold text-slate-800">Notifications</h4>
+              <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                Notifications
+              </h3>
               {unreadCount > 0 && (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-50 text-brand-700 border border-brand-200">
-                  {unreadCount} New
+                <span className="px-2 py-0.5 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 text-[10px] font-bold">
+                  {unreadCount} Unread
                 </span>
               )}
             </div>
-            {unreadCount > 0 && (
-              <button
-                onClick={handleMarkAllRead}
-                className="text-[11px] font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1"
-              >
-                <CheckCheck className="w-3.5 h-3.5" /> Mark all read
-              </button>
-            )}
           </div>
 
-          {/* List */}
-          <div className="max-h-80 overflow-y-auto divide-y divide-slate-100">
+          <div className="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
             {notifications.length === 0 ? (
-              <div className="p-6 text-center text-xs text-slate-400">
-                No notifications right now.
-              </div>
+              <p className="p-6 text-xs text-slate-400 text-center">No notifications at this time.</p>
             ) : (
               notifications.map((n) => (
                 <div
                   key={n._id}
-                  onClick={() => !n.isRead && handleMarkRead(n._id)}
-                  className={`p-3.5 flex items-start gap-3 hover:bg-slate-50 transition-colors cursor-pointer ${
-                    !n.isRead ? 'bg-brand-50/40' : ''
+                  onClick={() => handleNotificationClick(n)}
+                  className={`p-3.5 flex items-start gap-3 cursor-pointer transition-colors ${
+                    !n.isRead
+                      ? 'bg-brand-50/50 dark:bg-brand-950/20 hover:bg-brand-100/50 dark:hover:bg-brand-900/30'
+                      : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
                   }`}
                 >
-                  <div className="p-2 rounded-xl bg-slate-100 flex-shrink-0 mt-0.5">
-                    {getTypeIcon(n.type)}
+                  <div className="p-2 rounded-xl bg-white dark:bg-slate-800 shadow-xs flex-shrink-0 mt-0.5 border border-slate-100 dark:border-slate-700">
+                    {getIcon(n.type)}
                   </div>
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <p className="text-xs font-bold text-slate-900">{n.title}</p>
-                      <span className="text-[10px] text-slate-400">
+                  <div className="flex-1 space-y-0.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">{n.title}</h4>
+                      <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap">
                         {formatDate(n.createdAt)}
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-600 leading-snug">{n.message}</p>
+                    <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug">{n.message}</p>
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-brand-600 dark:text-brand-400 pt-1">
+                      View details <ExternalLink className="w-2.5 h-2.5" />
+                    </span>
                   </div>
+                  {!n.isRead && <span className="w-2 h-2 rounded-full bg-brand-600 flex-shrink-0 mt-2"></span>}
                 </div>
               ))
             )}

@@ -34,8 +34,16 @@ const updateProfile = async (req, res, next) => {
       return errorResponse(res, 404, 'User not found');
     }
 
-    if (name) user.name = name;
-    if (department) user.department = department;
+    let profileChanged = false;
+
+    if (name && name !== user.name) {
+      user.name = name;
+      profileChanged = true;
+    }
+    if (department && department !== user.department) {
+      user.department = department;
+      profileChanged = true;
+    }
     if (securityQuestion) user.securityQuestion = securityQuestion;
     if (securityAnswer) user.securityAnswer = securityAnswer;
 
@@ -45,6 +53,7 @@ const updateProfile = async (req, res, next) => {
         return errorResponse(res, 400, 'This email address is already in use by another account');
       }
       user.email = email.toLowerCase();
+      profileChanged = true;
     }
 
     // Password change verification
@@ -73,7 +82,7 @@ const updateProfile = async (req, res, next) => {
         status: 'Success'
       });
 
-      // Notify Admins
+      // Notify Admins about Password Change
       const admins = await User.find({ role: 'admin' });
       await Promise.all(
         admins.map((adm) =>
@@ -82,6 +91,19 @@ const updateProfile = async (req, res, next) => {
             title: 'Password Changed (Self)',
             message: `Employee ${user.name} (${user.employeeId}) updated their account password.`,
             type: 'Password'
+          })
+        )
+      );
+    } else if (profileChanged) {
+      // Notify Admins about Profile Details Update
+      const admins = await User.find({ role: 'admin' });
+      await Promise.all(
+        admins.map((adm) =>
+          Notification.create({
+            userId: adm._id,
+            title: 'Employee Profile Updated',
+            message: `Employee ${user.name} (${user.employeeId}) updated their profile details (department/email/name).`,
+            type: 'Account'
           })
         )
       );

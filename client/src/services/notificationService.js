@@ -10,6 +10,8 @@ export const markAsRead = async (id) => {
   return response.data;
 };
 
+export const markNotificationAsRead = markAsRead;
+
 export const markAllAsRead = async () => {
   const response = await api.put('/notifications/read-all');
   return response.data;
