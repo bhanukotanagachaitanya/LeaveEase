@@ -10,7 +10,7 @@ const Navbar = ({ onToggleSidebar }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 px-4 lg:px-8 py-3 flex items-center justify-between shadow-xs">
+    <header className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border-b border-slate-200/60 dark:border-slate-800/60 px-4 lg:px-8 py-3 flex items-center justify-between shadow-xs">
       <div className="flex items-center gap-4">
         <button
           onClick={onToggleSidebar}
@@ -19,19 +19,23 @@ const Navbar = ({ onToggleSidebar }) => {
           <Menu className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-brand-800 flex items-center justify-center text-white shadow-md font-extrabold text-sm tracking-widest">
+        {/* Clickable Logo Redirection to Dashboard */}
+        <Link
+          to={isAdmin ? '/admin/dashboard' : '/dashboard'}
+          className="flex items-center gap-2.5 group cursor-pointer"
+        >
+          <div className="w-9 h-9 rounded-xl bg-brand-800 flex items-center justify-center text-white shadow-md font-extrabold text-sm tracking-widest group-hover:scale-105 transition-transform">
             LE
           </div>
           <div>
-            <h1 className="font-bold text-slate-900 dark:text-white leading-tight hidden sm:block text-base tracking-tight">
+            <h1 className="font-bold text-slate-900 dark:text-white leading-tight hidden sm:block text-base tracking-tight group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
               LeaveEase
             </h1>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:block font-medium">
               Enterprise HR Management System
             </p>
           </div>
-        </div>
+        </Link>
       </div>
 
       <div className="flex items-center gap-3">
@@ -72,7 +76,7 @@ const Navbar = ({ onToggleSidebar }) => {
 
           {dropdownOpen && (
             <div
-              className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 py-2 z-50 animate-fade-in"
+              className="absolute right-0 mt-2 w-56 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 py-2 z-50 animate-fade-in"
               onClick={() => setDropdownOpen(false)}
             >
               <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">

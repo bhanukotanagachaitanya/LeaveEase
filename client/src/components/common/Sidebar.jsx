@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   LayoutDashboard,
@@ -57,19 +57,25 @@ const Sidebar = ({ isOpen, onClose }) => {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        {/* Sidebar Header */}
+        {/* Sidebar Header with Clickable Logo Link */}
         <div className="p-6 flex items-center justify-between border-b border-slate-800">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-blue-400 flex items-center justify-center font-extrabold text-white shadow-lg text-sm tracking-widest">
+          <Link
+            to={isAdmin ? '/admin/dashboard' : '/dashboard'}
+            onClick={onClose}
+            className="flex items-center gap-3 group cursor-pointer"
+          >
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-blue-400 flex items-center justify-center font-extrabold text-white shadow-lg text-sm tracking-widest group-hover:scale-105 transition-transform">
               LE
             </div>
             <div>
-              <h2 className="font-bold text-sm text-white tracking-tight">LeaveEase</h2>
+              <h2 className="font-bold text-sm text-white tracking-tight group-hover:text-brand-400 transition-colors">
+                LeaveEase
+              </h2>
               <span className="text-[11px] font-semibold text-brand-400 tracking-wider uppercase">
                 {isAdmin ? 'Admin Console' : 'Employee Portal'}
               </span>
             </div>
-          </div>
+          </Link>
           <button
             onClick={onClose}
             className="p-1 rounded-lg text-slate-400 hover:text-white lg:hidden"

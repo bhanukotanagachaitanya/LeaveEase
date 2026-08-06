@@ -1,17 +1,20 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { getLeaveHistory, cancelLeave } from '../services/leaveService';
 import { useToast } from '../context/ToastContext';
 import LeaveStatusBadge from '../components/leave/LeaveStatusBadge';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import Modal from '../components/common/Modal';
 import { formatDate } from '../utils/dateUtils';
-import { Search, Filter, History, Trash2, Calendar, AlertCircle } from 'lucide-react';
+import { Search, History, Trash2, Calendar, AlertCircle } from 'lucide-react';
 
 const STATUS_TABS = ['All', 'Pending', 'Approved', 'Rejected', 'Cancelled'];
 
 const LeaveHistory = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [leaveRequests, setLeaveRequests] = useState([]);
-  const [activeTab, setActiveTab] = useState('All');
+  const [activeTab, setActiveTab] = useState(searchParams.get('status') || 'All');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({ page: 1, total: 0, pages: 1 });
@@ -23,6 +26,14 @@ const LeaveHistory = () => {
 
   const { showSuccess, showError } = useToast();
 
+  // Sync URL search params with state
+  useEffect(() => {
+    const statusFromUrl = searchParams.get('status');
+    if (statusFromUrl && statusFromUrl !== activeTab) {
+      setActiveTab(statusFromUrl);
+    }
+  }, [searchParams]);
+
   const fetchHistory = useCallback(async () => {
     setLoading(true);
     try {
@@ -32,12 +43,18 @@ const LeaveHistory = () => {
         page: pagination.page,
         limit: 10
       });
-      if (res.success) {
-        setLeaveRequests(res.data.leaveRequests);
-        setPagination(res.data.pagination);
+      if (res.success && res.data) {
+        const fetchedList = res.data.leaveRequests || res.data.leaves || [];
+        setLeaveRequests(Array.isArray(fetchedList) ? fetchedList : []);
+        if (res.data.pagination) {
+          setPagination(res.data.pagination);
+        }
+      } else {
+        setLeaveRequests([]);
       }
     } catch (err) {
       showError(err.response?.data?.message || 'Failed to load leave history');
+      setLeaveRequests([]);
     } finally {
       setLoading(false);
     }
@@ -74,18 +91,18 @@ const LeaveHistory = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-3 bg-brand-50 text-brand-600 rounded-2xl border border-brand-100">
+          <div className="p-3 bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 rounded-2xl border border-brand-100 dark:border-brand-800 shadow-xs">
             <History className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-slate-900">Leave History</h2>
-            <p className="text-xs text-slate-500">Track and manage all your submitted leave requests</p>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Leave History</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Track and manage all your submitted leave requests</p>
           </div>
         </div>
       </div>
 
       {/* Filter Tabs & Search Bar */}
-      <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-subtle space-y-4">
+      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-4 border border-slate-200/80 dark:border-slate-800/80 shadow-subtle space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           {/* Tabs */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
@@ -94,12 +111,13 @@ const LeaveHistory = () => {
                 key={tab}
                 onClick={() => {
                   setActiveTab(tab);
+                  setSearchParams({ status: tab });
                   setPagination((prev) => ({ ...prev, page: 1 }));
                 }}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                   activeTab === tab
                     ? 'bg-brand-600 text-white shadow-xs'
-                    : 'text-slate-600 hover:bg-slate-100'
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >
                 {tab}
@@ -118,27 +136,27 @@ const LeaveHistory = () => {
                 setPagination((prev) => ({ ...prev, page: 1 }));
               }}
               placeholder="Search reason or type..."
-              className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white caret-brand-600 dark:caret-brand-400 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-xs"
             />
           </div>
         </div>
       </div>
 
       {/* Main Table View */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-subtle overflow-hidden">
+      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-200/80 dark:border-slate-800/80 shadow-subtle overflow-hidden">
         {loading ? (
           <LoadingSpinner message="Fetching leave history records..." />
-        ) : leaveRequests.length === 0 ? (
+        ) : !leaveRequests || leaveRequests.length === 0 ? (
           <div className="p-12 text-center">
-            <AlertCircle className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-            <p className="text-sm font-bold text-slate-700">No Leave History Records Found</p>
-            <p className="text-xs text-slate-500 mt-1">Try resetting your filters or search keyword</p>
+            <AlertCircle className="w-10 h-10 text-slate-300 dark:text-slate-700 mx-auto mb-2" />
+            <p className="text-sm font-bold text-slate-700 dark:text-slate-300">No Leave History Records Found</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Try resetting your filters or search keyword</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50/70 border-b border-slate-100 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                <tr className="bg-slate-50/70 dark:bg-slate-800/60 border-b border-slate-100 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   <th className="py-3.5 px-6">Leave Type</th>
                   <th className="py-3.5 px-6">Dates & Duration</th>
                   <th className="py-3.5 px-6">Reason</th>
@@ -147,28 +165,28 @@ const LeaveHistory = () => {
                   <th className="py-3.5 px-6 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-xs font-medium text-slate-700">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300">
                 {leaveRequests.map((leave) => (
-                  <tr key={leave._id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="py-4 px-6 font-bold text-slate-900">{leave.leaveType}</td>
+                  <tr key={leave._id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
+                    <td className="py-4 px-6 font-bold text-slate-900 dark:text-white">{leave.leaveType}</td>
                     <td className="py-4 px-6">
-                      <div className="flex items-center gap-1 font-semibold text-slate-800">
+                      <div className="flex items-center gap-1 font-semibold text-slate-800 dark:text-slate-200">
                         <Calendar className="w-3.5 h-3.5 text-slate-400" />
                         <span>
                           {formatDate(leave.fromDate)} - {formatDate(leave.toDate)}
                         </span>
                       </div>
-                      <span className="text-[11px] text-brand-700 font-bold">
+                      <span className="text-[11px] text-brand-700 dark:text-brand-400 font-bold">
                         {leave.totalDays} Days
                       </span>
                     </td>
-                    <td className="py-4 px-6 max-w-xs truncate text-slate-600" title={leave.reason}>
+                    <td className="py-4 px-6 max-w-xs truncate text-slate-600 dark:text-slate-400" title={leave.reason}>
                       {leave.reason}
                     </td>
                     <td className="py-4 px-6">
                       <LeaveStatusBadge status={leave.status} />
                     </td>
-                    <td className="py-4 px-6 text-slate-500 italic max-w-xs truncate">
+                    <td className="py-4 px-6 text-slate-500 dark:text-slate-400 italic max-w-xs truncate">
                       {leave.remarks || '-'}
                     </td>
                     <td className="py-4 px-6 text-right">
@@ -190,7 +208,7 @@ const LeaveHistory = () => {
 
         {/* Pagination Footer */}
         {pagination.pages > 1 && (
-          <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+          <div className="px-6 py-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
             <span>
               Page {pagination.page} of {pagination.pages} ({pagination.total} records)
             </span>
@@ -198,14 +216,14 @@ const LeaveHistory = () => {
               <button
                 disabled={pagination.page <= 1}
                 onClick={() => setPagination((prev) => ({ ...prev, page: prev.page - 1 }))}
-                className="px-3 py-1.5 rounded-lg border border-slate-300 font-semibold hover:bg-slate-50 disabled:opacity-40"
+                className="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40"
               >
                 Previous
               </button>
               <button
                 disabled={pagination.page >= pagination.pages}
                 onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
-                className="px-3 py-1.5 rounded-lg border border-slate-300 font-semibold hover:bg-slate-50 disabled:opacity-40"
+                className="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40"
               >
                 Next
               </button>
@@ -221,7 +239,7 @@ const LeaveHistory = () => {
         title="Confirm Cancel Leave Request"
       >
         <div className="space-y-4">
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-slate-600 dark:text-slate-300">
             Are you sure you want to cancel your pending <strong>{targetLeave?.leaveType}</strong> request for{' '}
             <strong>
               {formatDate(targetLeave?.fromDate)} to {formatDate(targetLeave?.toDate)}
@@ -232,7 +250,7 @@ const LeaveHistory = () => {
           <div className="flex items-center justify-end gap-3 pt-2">
             <button
               onClick={() => setCancelModalOpen(false)}
-              className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+              className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
             >
               No, Keep Request
             </button>
