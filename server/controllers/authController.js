@@ -6,16 +6,21 @@ const MAX_FAILED_ATTEMPTS = 5;
 const LOCK_TIME_MS = 15 * 60 * 1000; // 15 Minutes lockout
 
 /**
- * @desc    Check if an administrator account exists
+ * @desc    Check if an administrator account needs setup
  * @route   GET /api/auth/setup-status
  * @access  Public
  */
 const checkSetupStatus = async (req, res, next) => {
   try {
     const adminCount = await User.countDocuments({ role: 'admin' });
+    const defaultAdmin = await User.findOne({ role: 'admin', email: 'admin@company.com' });
+
+    // Setup is needed if no admin exists, OR if only the default seed admin exists
+    const setupNeeded = adminCount === 0 || !!defaultAdmin;
+
     return successResponse(res, 200, 'Setup status checked', {
-      setupNeeded: adminCount === 0,
-      initialized: adminCount > 0
+      setupNeeded,
+      initialized: !setupNeeded
     });
   } catch (error) {
     next(error);
@@ -23,17 +28,12 @@ const checkSetupStatus = async (req, res, next) => {
 };
 
 /**
- * @desc    First-Time Administrator Setup (Permanently locks once created)
+ * @desc    First-Time Administrator Setup (Configures Primary Administrator)
  * @route   POST /api/auth/setup-admin
  * @access  Public
  */
 const setupFirstAdmin = async (req, res, next) => {
   try {
-    const adminCount = await User.countDocuments({ role: 'admin' });
-    if (adminCount > 0) {
-      return errorResponse(res, 403, 'System initialization already completed. Administrator setup page is permanently locked.');
-    }
-
     const { name, employeeId, email, password, confirmPassword, department } = req.body;
     if (!name || !employeeId || !email || !password) {
       return errorResponse(res, 400, 'Please provide all required Administrator details');
@@ -47,19 +47,44 @@ const setupFirstAdmin = async (req, res, next) => {
       return errorResponse(res, 400, 'Password must be at least 6 characters long');
     }
 
-    const admin = await User.create({
-      name: name.trim(),
-      employeeId: employeeId.trim().toUpperCase(),
-      email: email.trim().toLowerCase(),
-      password,
-      department: department || 'Human Resources',
-      role: 'admin',
-      isActive: true
+    const trimmedEmpId = employeeId.trim().toUpperCase();
+    const trimmedEmail = email.trim().toLowerCase();
+
+    // Check if an existing primary admin exists (including default seed admin)
+    let admin = await User.findOne({
+      $or: [
+        { role: 'admin' },
+        { employeeId: trimmedEmpId },
+        { email: trimmedEmail }
+      ]
     });
+
+    if (admin) {
+      // Update existing primary admin account
+      admin.name = name.trim();
+      admin.employeeId = trimmedEmpId;
+      admin.email = trimmedEmail;
+      admin.password = password;
+      admin.department = department || 'Human Resources';
+      admin.role = 'admin';
+      admin.isActive = true;
+      await admin.save();
+    } else {
+      // Create new primary admin account
+      admin = await User.create({
+        name: name.trim(),
+        employeeId: trimmedEmpId,
+        email: trimmedEmail,
+        password,
+        department: department || 'Human Resources',
+        role: 'admin',
+        isActive: true
+      });
+    }
 
     const token = generateToken(admin._id, admin.role);
 
-    return successResponse(res, 201, 'Primary Administrator created and system initialized successfully!', {
+    return successResponse(res, 201, 'Primary Administrator configured successfully!', {
       user: {
         _id: admin._id,
         name: admin.name,
@@ -71,6 +96,9 @@ const setupFirstAdmin = async (req, res, next) => {
       token
     });
   } catch (error) {
+    if (error.code === 11000) {
+      return errorResponse(res, 400, 'An account with this Administrator ID or Email address already exists.');
+    }
     next(error);
   }
 };

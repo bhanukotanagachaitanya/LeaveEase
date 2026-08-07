@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { setupFirstAdmin } from '../services/authService';
-import { ShieldCheck, ArrowRight, ShieldAlert, AlertCircle } from 'lucide-react';
+import { ShieldAlert, ArrowRight, AlertCircle } from 'lucide-react';
 
 const SetupAdmin = () => {
   const [formData, setFormData] = useState({
@@ -47,7 +47,7 @@ const SetupAdmin = () => {
       const res = await setupFirstAdmin(formData);
       if (res.success) {
         login(res.data.user, res.data.token);
-        showSuccess('Primary Administrator initialized successfully!');
+        showSuccess('Primary Administrator account configured successfully!');
         navigate('/admin/dashboard');
       }
     } catch (err) {
@@ -59,22 +59,26 @@ const SetupAdmin = () => {
 
   return (
     <div className="max-w-md mx-auto">
-      <div className="text-center mb-6">
-        <div className="w-14 h-14 rounded-2xl bg-brand-600 flex items-center justify-center text-white font-extrabold text-2xl mx-auto shadow-xl mb-3">
-          LE
-        </div>
-        <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white">System Initialization</h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
-          Create the primary Administrator account for LeaveEase Enterprise HRMS
+      <div className="text-center mb-6 space-y-2">
+        <img
+          src="/logo.png"
+          alt="LeaveEase Logo"
+          className="w-14 h-14 object-contain mx-auto drop-shadow-md"
+        />
+        <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          System Initialization
+        </h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+          Create or update the primary Administrator account for LeaveEase HRMS
         </p>
       </div>
 
       <div className="p-3.5 bg-amber-50 dark:bg-amber-950/40 rounded-2xl border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-300 text-xs mb-6 flex items-start gap-2.5">
         <ShieldAlert className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
         <div>
-          <span className="font-bold">One-Time Setup Requirement:</span>
+          <span className="font-bold">One-Time Administrator Setup:</span>
           <p className="text-[11px] mt-0.5 text-amber-800 dark:text-amber-400 leading-relaxed">
-            After this initial administrator is registered, this initialization page will be permanently locked.
+            Fill in your preferred details below to set up your primary Administrator account.
           </p>
         </div>
       </div>
