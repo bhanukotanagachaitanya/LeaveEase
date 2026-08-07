@@ -19,9 +19,7 @@ import {
   Menu,
   X,
   FileCheck,
-  Building,
-  Smartphone,
-  Laptop
+  Smartphone
 } from 'lucide-react';
 
 const HomePage = () => {
@@ -102,7 +100,7 @@ const HomePage = () => {
 
   const faqs = [
     {
-      q: 'How do employees log into LeaveEase for the first time?',
+      q: 'How do employees log into LeaveEase?',
       a: 'The Administrator creates the employee account in the Employee Directory and provides the initial login credentials. Employees can log in using their email or Employee ID.'
     },
     {
@@ -158,25 +156,17 @@ const HomePage = () => {
           {isAuthenticated ? (
             <Link
               to={isAdmin ? '/admin/dashboard' : '/dashboard'}
-              className="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow-md transition-all flex items-center gap-1.5"
+              className="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow-md transition-all flex items-center gap-1.5"
             >
               Go to Dashboard <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           ) : (
-            <div className="flex items-center gap-2">
-              <Link
-                to="/login"
-                className="px-4 py-2 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 text-xs font-bold shadow-md transition-all"
-              >
-                Sign In
-              </Link>
-              <Link
-                to="/setup-admin"
-                className="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow-md transition-all"
-              >
-                Setup Admin
-              </Link>
-            </div>
+            <Link
+              to="/login"
+              className="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow-md transition-all flex items-center gap-1.5"
+            >
+              Sign In <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           )}
         </div>
 
@@ -217,29 +207,21 @@ const HomePage = () => {
             FAQ
           </a>
 
-          <div className="border-t border-slate-200 dark:border-slate-800 pt-3 flex flex-col gap-2">
+          <div className="border-t border-slate-200 dark:border-slate-800 pt-3">
             {isAuthenticated ? (
               <Link
                 to={isAdmin ? '/admin/dashboard' : '/dashboard'}
-                className="w-full py-2.5 rounded-xl bg-brand-600 text-white text-center text-xs font-bold shadow-md"
+                className="w-full py-2.5 rounded-xl bg-brand-600 text-white text-center text-xs font-bold shadow-md block"
               >
                 Go to Dashboard
               </Link>
             ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="w-full py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-center text-xs font-bold shadow-md"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/setup-admin"
-                  className="w-full py-2.5 rounded-xl bg-brand-600 text-white text-center text-xs font-bold shadow-md"
-                >
-                  Setup Admin
-                </Link>
-              </>
+              <Link
+                to="/login"
+                className="w-full py-2.5 rounded-xl bg-brand-600 text-white text-center text-xs font-bold shadow-md block"
+              >
+                Sign In to Portal
+              </Link>
             )}
           </div>
         </div>
@@ -281,12 +263,12 @@ const HomePage = () => {
               >
                 Sign In to Portal <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link
-                to="/setup-admin"
+              <a
+                href="#features"
                 className="w-full sm:w-auto px-8 py-3.5 rounded-2xl glass-card hover:bg-white dark:hover:bg-slate-800 text-slate-800 dark:text-white text-sm font-extrabold border border-slate-300 dark:border-slate-700 shadow-md transition-all flex items-center justify-center gap-2"
               >
-                <ShieldCheck className="w-4 h-4 text-emerald-500" /> Setup Admin Account
-              </Link>
+                Explore Features
+              </a>
             </>
           )}
         </div>
@@ -489,8 +471,7 @@ const HomePage = () => {
           </div>
 
           <div className="flex items-center gap-6 text-[11px]">
-            <Link to="/login" className="hover:text-brand-600">Employee Login</Link>
-            <Link to="/setup-admin" className="hover:text-brand-600">Admin Setup</Link>
+            <Link to="/login" className="hover:text-brand-600">Portal Sign In</Link>
             <span>© 2026 LeaveEase HRMS. All Rights Reserved.</span>
           </div>
         </div>
