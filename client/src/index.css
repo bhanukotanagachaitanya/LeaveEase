@@ -30,19 +30,48 @@
 }
 
 .glass-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.85) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .dark .glass-card {
   background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.85) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Light Glossy Special High-Look Hero & Card Utilities */
+.glossy-hero {
+  background: radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.15), transparent 70%),
+              radial-gradient(circle at 80% 60%, rgba(16, 185, 129, 0.12), transparent 50%),
+              radial-gradient(circle at 10% 80%, rgba(139, 92, 246, 0.1), transparent 50%);
+}
+
+.dark .glossy-hero {
+  background: radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.25), transparent 70%),
+              radial-gradient(circle at 80% 60%, rgba(16, 185, 129, 0.18), transparent 50%),
+              radial-gradient(circle at 10% 80%, rgba(139, 92, 246, 0.2), transparent 50%);
+}
+
+.glossy-pill {
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(51, 65, 85, 0.6);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.dark .glossy-pill {
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(51, 65, 85, 0.8);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Global High-Contrast Non-Faded Text Styling for All Input Controls */
@@ -94,12 +123,21 @@ input::placeholder, textarea::placeholder {
   background: #94a3b8;
 }
 
-/* Smooth Fade Animations */
+/* Smooth Fade & Float Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
 .animate-fade-in {
-  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-float {
+  animation: floatSlow 4s ease-in-out infinite;
 }

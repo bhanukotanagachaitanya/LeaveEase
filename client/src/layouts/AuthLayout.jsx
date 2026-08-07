@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
 import { checkSetupStatus } from '../services/authService';
 
 const AuthLayout = () => {
@@ -50,11 +50,15 @@ const AuthLayout = () => {
       {/* Main Glassmorphism Card Container */}
       <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 z-10">
         <div className="w-full max-w-md bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-200/50 dark:border-slate-800 p-6 sm:p-8 space-y-6 transition-all duration-300">
-          {/* Header Branding */}
+          {/* Header Branding with Official Logo Image */}
           <div className="text-center space-y-2">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-700 via-brand-600 to-blue-500 text-white font-extrabold text-2xl shadow-xl shadow-brand-900/30 transform hover:scale-105 transition-transform">
-              LE
-            </div>
+            <Link to="/" className="inline-block cursor-pointer">
+              <img
+                src="/logo.png"
+                alt="LeaveEase Official Logo"
+                className="w-14 h-14 object-contain drop-shadow-md mx-auto transform hover:scale-105 transition-transform"
+              />
+            </Link>
             <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               LeaveEase
             </h1>

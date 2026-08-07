@@ -57,16 +57,18 @@ const Sidebar = ({ isOpen, onClose }) => {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        {/* Sidebar Header with Clickable Logo Link */}
+        {/* Sidebar Header with Official Logo Image */}
         <div className="p-6 flex items-center justify-between border-b border-slate-800">
           <Link
             to={isAdmin ? '/admin/dashboard' : '/dashboard'}
             onClick={onClose}
             className="flex items-center gap-3 group cursor-pointer"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-blue-400 flex items-center justify-center font-extrabold text-white shadow-lg text-sm tracking-widest group-hover:scale-105 transition-transform">
-              LE
-            </div>
+            <img
+              src="/logo.png"
+              alt="LeaveEase Logo"
+              className="w-10 h-10 object-contain drop-shadow-md group-hover:scale-105 transition-transform"
+            />
             <div>
               <h2 className="font-bold text-sm text-white tracking-tight group-hover:text-brand-400 transition-colors">
                 LeaveEase

@@ -10,6 +10,7 @@ import ProtectedRoute from './ProtectedRoute';
 import AdminRoute from './AdminRoute';
 
 // Pages
+import HomePage from '../pages/HomePage';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
 import ForgotPasswordRequest from '../pages/ForgotPasswordRequest';
@@ -33,6 +34,9 @@ import Reports from '../pages/Reports';
 const AppRoutes = () => {
   return (
     <Routes>
+      {/* Public Interactive Landing Home Page */}
+      <Route path="/" element={<HomePage />} />
+
       {/* Public Auth Routes */}
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
@@ -66,7 +70,7 @@ const AppRoutes = () => {
       </Route>
 
       {/* Fallback Redirect */}
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };

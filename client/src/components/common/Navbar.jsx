@@ -10,7 +10,7 @@ const Navbar = ({ onToggleSidebar }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border-b border-slate-200/60 dark:border-slate-800/60 px-4 lg:px-8 py-3 flex items-center justify-between shadow-xs">
+    <header className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border-b border-slate-200/60 dark:border-slate-800/60 px-4 lg:px-8 py-2.5 flex items-center justify-between shadow-xs">
       <div className="flex items-center gap-4">
         <button
           onClick={onToggleSidebar}
@@ -24,9 +24,11 @@ const Navbar = ({ onToggleSidebar }) => {
           to={isAdmin ? '/admin/dashboard' : '/dashboard'}
           className="flex items-center gap-2.5 group cursor-pointer"
         >
-          <div className="w-9 h-9 rounded-xl bg-brand-800 flex items-center justify-center text-white shadow-md font-extrabold text-sm tracking-widest group-hover:scale-105 transition-transform">
-            LE
-          </div>
+          <img
+            src="/logo.png"
+            alt="LeaveEase Logo"
+            className="w-9 h-9 object-contain drop-shadow-sm group-hover:scale-105 transition-transform"
+          />
           <div>
             <h1 className="font-bold text-slate-900 dark:text-white leading-tight hidden sm:block text-base tracking-tight group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
               LeaveEase
