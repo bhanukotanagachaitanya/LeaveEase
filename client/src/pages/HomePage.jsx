@@ -59,6 +59,11 @@ const HomePage = () => {
     setFaqOpen((prev) => ({ ...prev, [index]: !prev[index] }));
   };
 
+  const scrollToTop = (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const features = [
     {
       icon: CalendarPlus,
@@ -100,6 +105,10 @@ const HomePage = () => {
 
   const faqs = [
     {
+      q: 'How do administrators log into LeaveEase?',
+      a: 'Log in directly using the Administrator ID (ADM001) or email (admin@company.com) with the password (Admin@123) on the Sign In page.'
+    },
+    {
       q: 'How do employees log into LeaveEase?',
       a: 'The Administrator creates the employee account in the Employee Directory and provides the initial login credentials. Employees can log in using their email or Employee ID.'
     },
@@ -110,10 +119,6 @@ const HomePage = () => {
     {
       q: 'Is LeaveEase accessible on mobile phones and desktop PCs?',
       a: 'Absolutely! LeaveEase features a fully responsive glossy design optimized for smartphones, tablets, laptops, and desktop screens.'
-    },
-    {
-      q: 'How do leave request notifications work?',
-      a: 'Notifications appear in real-time in the top navigation bell drawer. Clicking any notification automatically routes you to the corresponding leave application or audit section.'
     }
   ];
 
@@ -121,21 +126,26 @@ const HomePage = () => {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 glossy-hero selection:bg-brand-500 selection:text-white transition-colors duration-200">
       {/* Navbar */}
       <header className="sticky top-0 z-50 glass-panel border-b border-white/60 dark:border-slate-800/80 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-subtle">
-        <div className="flex items-center gap-3">
+        {/* Clickable Brand Logo - Scrolls Back to Top of Home Page */}
+        <a
+          href="/"
+          onClick={scrollToTop}
+          className="flex items-center gap-3 cursor-pointer group"
+        >
           <img
             src="/logo.png"
             alt="LeaveEase Logo"
-            className="w-10 h-10 object-contain drop-shadow-md rounded-xl"
+            className="w-10 h-10 object-contain drop-shadow-md rounded-xl group-hover:scale-105 transition-transform"
           />
           <div>
-            <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-slate-900 via-brand-800 to-brand-600 dark:from-white dark:via-brand-300 dark:to-brand-400 bg-clip-text text-transparent">
+            <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-slate-900 via-brand-800 to-brand-600 dark:from-white dark:via-brand-300 dark:to-brand-400 bg-clip-text text-transparent group-hover:text-brand-600 transition-colors">
               LeaveEase
             </span>
             <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest block -mt-1">
               Enterprise HRMS
             </span>
           </div>
-        </div>
+        </a>
 
         {/* Desktop Links & CTAs */}
         <div className="hidden md:flex items-center gap-4">
@@ -465,10 +475,10 @@ const HomePage = () => {
       {/* Footer */}
       <footer className="glass-panel border-t border-white/60 dark:border-slate-800/80 px-4 sm:px-8 py-8 mt-16">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400 font-medium">
-          <div className="flex items-center gap-3">
+          <a href="/" onClick={scrollToTop} className="flex items-center gap-3 cursor-pointer">
             <img src="/logo.png" alt="LeaveEase" className="w-7 h-7 object-contain" />
             <span className="font-bold text-slate-900 dark:text-white">LeaveEase Technologies</span>
-          </div>
+          </a>
 
           <div className="flex items-center gap-6 text-[11px]">
             <Link to="/login" className="hover:text-brand-600">Portal Sign In</Link>

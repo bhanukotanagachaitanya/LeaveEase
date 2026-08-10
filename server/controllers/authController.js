@@ -6,21 +6,15 @@ const MAX_FAILED_ATTEMPTS = 5;
 const LOCK_TIME_MS = 15 * 60 * 1000; // 15 Minutes lockout
 
 /**
- * @desc    Check if an administrator account needs setup
+ * @desc    Check system setup status (Direct login mode enabled - no one-time setup required)
  * @route   GET /api/auth/setup-status
  * @access  Public
  */
 const checkSetupStatus = async (req, res, next) => {
   try {
-    const adminCount = await User.countDocuments({ role: 'admin' });
-    const defaultAdmin = await User.findOne({ role: 'admin', email: 'admin@company.com' });
-
-    // Setup is needed if no admin exists, OR if only the default seed admin exists
-    const setupNeeded = adminCount === 0 || !!defaultAdmin;
-
-    return successResponse(res, 200, 'Setup status checked', {
-      setupNeeded,
-      initialized: !setupNeeded
+    return successResponse(res, 200, 'System ready for login', {
+      setupNeeded: false,
+      initialized: true
     });
   } catch (error) {
     next(error);
@@ -28,77 +22,14 @@ const checkSetupStatus = async (req, res, next) => {
 };
 
 /**
- * @desc    First-Time Administrator Setup (Configures Primary Administrator)
+ * @desc    First-Time Administrator Setup - Disabled in Direct Login Mode
  * @route   POST /api/auth/setup-admin
  * @access  Public
  */
 const setupFirstAdmin = async (req, res, next) => {
   try {
-    const { name, employeeId, email, password, confirmPassword, department } = req.body;
-    if (!name || !employeeId || !email || !password) {
-      return errorResponse(res, 400, 'Please provide all required Administrator details');
-    }
-
-    if (confirmPassword && password !== confirmPassword) {
-      return errorResponse(res, 400, 'Password and Password Confirmation do not match');
-    }
-
-    if (password.length < 6) {
-      return errorResponse(res, 400, 'Password must be at least 6 characters long');
-    }
-
-    const trimmedEmpId = employeeId.trim().toUpperCase();
-    const trimmedEmail = email.trim().toLowerCase();
-
-    // Check if an existing primary admin exists (including default seed admin)
-    let admin = await User.findOne({
-      $or: [
-        { role: 'admin' },
-        { employeeId: trimmedEmpId },
-        { email: trimmedEmail }
-      ]
-    });
-
-    if (admin) {
-      // Update existing primary admin account
-      admin.name = name.trim();
-      admin.employeeId = trimmedEmpId;
-      admin.email = trimmedEmail;
-      admin.password = password;
-      admin.department = department || 'Human Resources';
-      admin.role = 'admin';
-      admin.isActive = true;
-      await admin.save();
-    } else {
-      // Create new primary admin account
-      admin = await User.create({
-        name: name.trim(),
-        employeeId: trimmedEmpId,
-        email: trimmedEmail,
-        password,
-        department: department || 'Human Resources',
-        role: 'admin',
-        isActive: true
-      });
-    }
-
-    const token = generateToken(admin._id, admin.role);
-
-    return successResponse(res, 201, 'Primary Administrator configured successfully!', {
-      user: {
-        _id: admin._id,
-        name: admin.name,
-        employeeId: admin.employeeId,
-        email: admin.email,
-        department: admin.department,
-        role: admin.role
-      },
-      token
-    });
+    return errorResponse(res, 400, 'Direct login mode active. Please log in using your Administrator credentials.');
   } catch (error) {
-    if (error.code === 11000) {
-      return errorResponse(res, 400, 'An account with this Administrator ID or Email address already exists.');
-    }
     next(error);
   }
 };
@@ -117,36 +48,33 @@ const register = async (req, res) => {
 };
 
 /**
- * @desc    Authenticate user via Employee ID or Employee Name & password
+ * @desc    Authenticate user via Employee ID, Email, or Name & Password
  * @route   POST /api/auth/login
  * @access  Public
  */
 const login = async (req, res, next) => {
   try {
-    const { identifier, password, role } = req.body;
+    const { identifier, password } = req.body;
 
     if (!identifier || !password) {
-      return errorResponse(res, 400, 'Please enter Employee ID / Name and Password');
+      return errorResponse(res, 400, 'Please enter Employee ID / Email / Name and Password');
     }
 
     const trimmedIdentifier = identifier.trim();
 
+    // Flexible identifier search matching employeeId, email, or name
     const query = {
       $or: [
         { employeeId: trimmedIdentifier.toUpperCase() },
-        { name: { $regex: `^${trimmedIdentifier}$`, $options: 'i' } },
-        { email: trimmedIdentifier.toLowerCase() }
+        { email: trimmedIdentifier.toLowerCase() },
+        { name: { $regex: `^${trimmedIdentifier}$`, $options: 'i' } }
       ]
     };
-
-    if (role) {
-      query.role = role;
-    }
 
     const user = await User.findOne(query);
 
     if (!user) {
-      return errorResponse(res, 401, 'Invalid credentials');
+      return errorResponse(res, 401, 'Invalid credentials. Please check your ID/Email and password.');
     }
 
     // Check Account Lockout status

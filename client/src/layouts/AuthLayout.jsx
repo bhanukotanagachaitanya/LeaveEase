@@ -1,30 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
-import { checkSetupStatus } from '../services/authService';
+import React from 'react';
+import { Outlet, Link } from 'react-router-dom';
 
 const AuthLayout = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [checking, setChecking] = useState(true);
-
-  useEffect(() => {
-    const fetchSetup = async () => {
-      try {
-        const res = await checkSetupStatus();
-        if (res.success && res.data.setupNeeded) {
-          if (location.pathname !== '/setup-admin') {
-            navigate('/setup-admin');
-          }
-        }
-      } catch (err) {
-        console.error('Setup status check error:', err);
-      } finally {
-        setChecking(false);
-      }
-    };
-    fetchSetup();
-  }, [navigate, location.pathname]);
-
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col justify-between relative overflow-hidden font-sans">
       {/* Premium Corporate Blue Gradient SVG Vector Office Background */}

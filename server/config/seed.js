@@ -11,12 +11,12 @@ const seedData = async (forceClear = false) => {
   try {
     const adminCount = await User.countDocuments({ role: 'admin' });
     if (adminCount > 0 && !forceClear) {
-      console.log('ℹ️ Seed check: LeaveEase Admin account already exists. Skipping auto-seed.');
+      console.log('ℹ️ Seed check: LeaveEase Admin account already exists.');
       return;
     }
 
-    if (forceClear) {
-      console.log('🧹 Clearing all collections for fresh LeaveEase setup...');
+    if (forceClear || adminCount === 0) {
+      console.log('🧹 Preparing clean LeaveEase database setup...');
       await User.deleteMany({});
       await LeaveRequest.deleteMany({});
       await Holiday.deleteMany({});
@@ -70,6 +70,7 @@ const seedData = async (forceClear = false) => {
     });
 
     console.log('✅ LeaveEase Database Seeding Completed Successfully!');
+    console.log('🔑 Admin Credentials: ID: ADM001 | Email: admin@company.com | Password: Admin@123');
   } catch (error) {
     console.error('❌ Seeding Error:', error);
   }

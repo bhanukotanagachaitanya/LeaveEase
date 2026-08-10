@@ -15,7 +15,6 @@ import Login from '../pages/Login';
 import Register from '../pages/Register';
 import ForgotPasswordRequest from '../pages/ForgotPasswordRequest';
 import CompletePasswordReset from '../pages/CompletePasswordReset';
-import SetupAdmin from '../pages/SetupAdmin';
 
 import EmployeeDashboard from '../pages/EmployeeDashboard';
 import ApplyLeave from '../pages/ApplyLeave';
@@ -43,7 +42,7 @@ const AppRoutes = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPasswordRequest />} />
         <Route path="/complete-reset" element={<CompletePasswordReset />} />
-        <Route path="/setup-admin" element={<SetupAdmin />} />
+        <Route path="/setup-admin" element={<Navigate to="/login" replace />} />
       </Route>
 
       {/* Protected Routes (Employee & Admin Shared) */}
