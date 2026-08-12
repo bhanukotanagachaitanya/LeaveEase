@@ -1,8 +1,10 @@
 {
   "name": "employee-leave-management-system",
-  "version": "1.0.0",
-  "description": "Employee Leave Management System (MERN Stack)",
+  "version": "2.0.0",
+  "description": "LeaveEase Enterprise Employee Leave Management System (MERN Stack)",
+  "main": "server/server.js",
   "scripts": {
+    "start": "cd server && node server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",
@@ -10,7 +12,8 @@
     "client": "cd client && npm run dev",
     "seed": "cd server && npm run seed",
     "build": "cd client && npm run build",
-    "push": "git add . && git commit -m \"Update LeaveEase project codebase\" && git push origin main"
+    "postinstall": "cd server && npm install && cd ../client && npm install",
+    "push": "git add . && git commit -m \"Update deployment files and project codebase\" && git push origin main"
   },
   "devDependencies": {
     "concurrently": "^9.0.0"
