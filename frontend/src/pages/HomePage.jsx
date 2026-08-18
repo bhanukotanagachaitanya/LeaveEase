@@ -10,8 +10,6 @@ import {
   KeyRound,
   BarChart3,
   ArrowRight,
-  ChevronDown,
-  ChevronUp,
   Menu,
   X
 } from 'lucide-react';
@@ -19,11 +17,6 @@ import {
 const HomePage = () => {
   const { isAuthenticated, isAdmin } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [faqOpen, setFaqOpen] = useState({ 0: true });
-
-  const toggleFaq = (index) => {
-    setFaqOpen((prev) => ({ ...prev, [index]: !prev[index] }));
-  };
 
   const scrollToTop = (e) => {
     e.preventDefault();
@@ -69,25 +62,6 @@ const HomePage = () => {
     }
   ];
 
-  const faqs = [
-    {
-      q: 'How do administrators log into LeaveEase?',
-      a: 'Log in directly using the Administrator ID (ADM001) or email (admin@company.com) with the password (Admin@123) on the Administrator Login tab.'
-    },
-    {
-      q: 'How do employees log into LeaveEase?',
-      a: 'The Administrator creates the employee account in the Employee Directory and provides initial credentials for logging in on the Employee Login tab.'
-    },
-    {
-      q: 'Can administrators view employee passwords?',
-      a: 'Yes! Administrators can view initial assigned passwords directly in the Employee Directory using the secure Eye toggle button and copy them to clipboard.'
-    },
-    {
-      q: 'Is LeaveEase accessible on mobile phones and desktop PCs?',
-      a: 'Absolutely! LeaveEase features a fully responsive glossy design optimized for smartphones, tablets, laptops, and desktop screens.'
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 glossy-hero selection:bg-brand-500 selection:text-white transition-colors duration-200">
       {/* Navbar */}
@@ -117,9 +91,6 @@ const HomePage = () => {
         <div className="hidden md:flex items-center gap-4">
           <a href="#features" className="text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
             Features
-          </a>
-          <a href="#faqs" className="text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
-            FAQ
           </a>
 
           <div className="h-5 w-px bg-slate-200 dark:bg-slate-800 mx-1"></div>
@@ -164,13 +135,6 @@ const HomePage = () => {
             className="block text-xs font-semibold text-slate-700 dark:text-slate-300 py-1"
           >
             Features
-          </a>
-          <a
-            href="#faqs"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-xs font-semibold text-slate-700 dark:text-slate-300 py-1"
-          >
-            FAQ
           </a>
 
           <div className="border-t border-slate-200 dark:border-slate-800 pt-3">
@@ -261,41 +225,6 @@ const HomePage = () => {
               </div>
             );
           })}
-        </div>
-      </section>
-
-      {/* FAQs Section */}
-      <section id="faqs" className="px-4 sm:px-8 py-12 max-w-4xl mx-auto space-y-8">
-        <div className="text-center space-y-2">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
-            Quick answers about LeaveEase accounts, permissions, and features
-          </p>
-        </div>
-
-        <div className="space-y-4">
-          {faqs.map((faq, idx) => (
-            <div
-              key={idx}
-              className="glass-card rounded-2xl border border-slate-200/80 dark:border-slate-800/80 overflow-hidden shadow-xs"
-            >
-              <button
-                onClick={() => toggleFaq(idx)}
-                className="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none"
-              >
-                <span>{faq.q}</span>
-                {faqOpen[idx] ? <ChevronUp className="w-4 h-4 text-brand-600" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
-              </button>
-
-              {faqOpen[idx] && (
-                <div className="px-5 pb-5 text-xs text-slate-600 dark:text-slate-300 font-medium border-t border-slate-100 dark:border-slate-800 pt-3 leading-relaxed">
-                  {faq.a}
-                </div>
-              )}
-            </div>
-          ))}
         </div>
       </section>
 
