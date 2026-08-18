@@ -53,7 +53,7 @@ const Login = () => {
       const res = await loginUser({
         identifier: identifier.trim(),
         password,
-        role: activeTab === 'admin' ? 'admin' : undefined
+        role: activeTab // Strict role validation passed ('employee' or 'admin')
       });
 
       if (res.success) {

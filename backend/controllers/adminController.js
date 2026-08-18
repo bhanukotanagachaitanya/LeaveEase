@@ -133,9 +133,7 @@ const createEmployee = async (req, res, next) => {
       return errorResponse(
         res,
         400,
-        existingUser.email === email.toLowerCase()
-          ? 'Email address is already in use'
-          : 'Employee ID is already registered'
+        'Employee already exists with this Employee ID or Email address!'
       );
     }
 
@@ -156,10 +154,13 @@ const createEmployee = async (req, res, next) => {
       type: 'Account'
     });
 
-    return successResponse(res, 201, 'Employee account created successfully', {
+    return successResponse(res, 201, 'Employee created successfully!', {
       employee: newEmployee
     });
   } catch (error) {
+    if (error.code === 11000) {
+      return errorResponse(res, 400, 'Employee already exists with this Employee ID or Email address!');
+    }
     next(error);
   }
 };
@@ -178,30 +179,45 @@ const updateEmployee = async (req, res, next) => {
       return errorResponse(res, 404, 'Employee record not found');
     }
 
-    if (name) employee.name = name;
-    if (email) employee.email = email.toLowerCase();
+    let changed = false;
+    if (name && name !== employee.name) {
+      employee.name = name;
+      changed = true;
+    }
+    if (email && email.toLowerCase() !== employee.email) {
+      const emailExists = await User.findOne({ email: email.toLowerCase() });
+      if (emailExists && emailExists._id.toString() !== employee._id.toString()) {
+        return errorResponse(res, 400, 'Email address is already in use by another user');
+      }
+      employee.email = email.toLowerCase();
+      changed = true;
+    }
     if (department) employee.department = department;
     if (role) employee.role = role;
-    if (isActive !== undefined) employee.isActive = isActive;
+    if (typeof isActive === 'boolean') employee.isActive = isActive;
 
     await employee.save();
 
-    return successResponse(res, 200, 'Employee profile updated successfully', { employee });
+    return successResponse(res, 200, 'Employee updated successfully', { employee });
   } catch (error) {
     next(error);
   }
 };
 
 /**
- * @desc    Toggle Employee Account Status (Activate/Deactivate)
- * @route   PUT /api/admin/employees/:id/status
+ * @desc    Toggle employee active/inactive status
+ * @route   PATCH /api/admin/employees/:id/toggle-status
  * @access  Private (Admin)
  */
 const toggleEmployeeStatus = async (req, res, next) => {
   try {
     const employee = await User.findById(req.params.id);
     if (!employee) {
-      return errorResponse(res, 404, 'Employee not found');
+      return errorResponse(res, 404, 'Employee record not found');
+    }
+
+    if (employee._id.toString() === req.user._id.toString()) {
+      return errorResponse(res, 400, 'You cannot deactivate your own Administrator account');
     }
 
     employee.isActive = !employee.isActive;
@@ -211,7 +227,7 @@ const toggleEmployeeStatus = async (req, res, next) => {
       res,
       200,
       `Employee account ${employee.isActive ? 'activated' : 'deactivated'} successfully`,
-      { isActive: employee.isActive }
+      { employee }
     );
   } catch (error) {
     next(error);
@@ -219,54 +235,57 @@ const toggleEmployeeStatus = async (req, res, next) => {
 };
 
 /**
- * @desc    Reset Employee Password by Admin
- * @route   PUT /api/admin/employees/:id/reset-password
+ * @desc    Reset employee password (Admin feature)
+ * @route   POST /api/admin/employees/:id/reset-password
  * @access  Private (Admin)
  */
 const resetEmployeePassword = async (req, res, next) => {
   try {
     const { newPassword } = req.body;
-    const employee = await User.findById(req.params.id);
+    if (!newPassword || newPassword.length < 6) {
+      return errorResponse(res, 400, 'Password must be at least 6 characters long');
+    }
 
+    const employee = await User.findById(req.params.id);
     if (!employee) {
       return errorResponse(res, 404, 'Employee record not found');
     }
 
-    if (!newPassword || newPassword.length < 6) {
-      return errorResponse(res, 400, 'New password must be at least 6 characters long');
-    }
-
     employee.password = newPassword;
-    employee.failedLoginAttempts = 0;
-    employee.lockUntil = undefined;
+    employee.initialPassword = newPassword;
     await employee.save();
 
     const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
 
+    // Log Password Reset Audit
     await PasswordAudit.create({
       userId: employee._id,
       employeeName: employee.name,
       employeeId: employee.employeeId,
       ipAddress: Array.isArray(clientIp) ? clientIp[0] : clientIp,
-      changedBy: 'Admin',
+      changedBy: `Admin (${req.user.name})`,
       status: 'Success'
     });
 
+    // Send Notification to Employee
     await Notification.create({
       userId: employee._id,
-      title: 'Password Reset by Administrator',
-      message: 'Your account password has been updated by your HR Administrator.',
+      title: 'Password Reset by Admin',
+      message: `Your account password was updated by HR Administrator ${req.user.name}.`,
       type: 'Password'
     });
 
-    return successResponse(res, 200, 'Employee password reset successfully');
+    return successResponse(res, 200, 'Employee password reset successfully', {
+      employeeId: employee.employeeId,
+      newPassword
+    });
   } catch (error) {
     next(error);
   }
 };
 
 /**
- * @desc    Delete Employee Account
+ * @desc    Delete an employee account (Admin feature)
  * @route   DELETE /api/admin/employees/:id
  * @access  Private (Admin)
  */
@@ -274,43 +293,18 @@ const deleteEmployee = async (req, res, next) => {
   try {
     const employee = await User.findById(req.params.id);
     if (!employee) {
-      return errorResponse(res, 404, 'Employee not found');
+      return errorResponse(res, 404, 'Employee record not found');
     }
 
-    await Promise.all([
-      User.findByIdAndDelete(req.params.id),
-      LeaveRequest.deleteMany({ employeeId: req.params.id })
-    ]);
+    if (employee._id.toString() === req.user._id.toString()) {
+      return errorResponse(res, 400, 'You cannot delete your own Administrator account');
+    }
 
-    return successResponse(res, 200, 'Employee and associated leave records deleted');
-  } catch (error) {
-    next(error);
-  }
-};
+    // Delete associated leave requests
+    await LeaveRequest.deleteMany({ employeeId: employee._id });
+    await User.findByIdAndDelete(req.params.id);
 
-/**
- * @desc    Get Password Audit Logs
- * @route   GET /api/admin/password-audits
- * @access  Private (Admin)
- */
-const getPasswordAudits = async (req, res, next) => {
-  try {
-    const { page = 1, limit = 15 } = req.query;
-    const skip = (parseInt(page) - 1) * parseInt(limit);
-
-    const [audits, total] = await Promise.all([
-      PasswordAudit.find().sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit)),
-      PasswordAudit.countDocuments()
-    ]);
-
-    return successResponse(res, 200, 'Password audit logs fetched', {
-      audits,
-      pagination: {
-        total,
-        page: parseInt(page),
-        pages: Math.ceil(total / parseInt(limit))
-      }
-    });
+    return successResponse(res, 200, 'Employee account deleted successfully');
   } catch (error) {
     next(error);
   }
@@ -323,6 +317,5 @@ module.exports = {
   updateEmployee,
   toggleEmployeeStatus,
   resetEmployeePassword,
-  deleteEmployee,
-  getPasswordAudits
+  deleteEmployee
 };

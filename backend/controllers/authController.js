@@ -6,7 +6,7 @@ const MAX_FAILED_ATTEMPTS = 5;
 const LOCK_TIME_MS = 15 * 60 * 1000; // 15 Minutes lockout
 
 /**
- * @desc    Check system setup status (Direct login mode enabled - no one-time setup required)
+ * @desc    Check system setup status (Direct login mode active)
  * @route   GET /api/auth/setup-status
  * @access  Public
  */
@@ -48,13 +48,13 @@ const register = async (req, res) => {
 };
 
 /**
- * @desc    Authenticate user via Employee ID, Email, or Name & Password
+ * @desc    Authenticate user via Employee ID, Email, or Name & Password with strict role verification
  * @route   POST /api/auth/login
  * @access  Public
  */
 const login = async (req, res, next) => {
   try {
-    const { identifier, password } = req.body;
+    const { identifier, password, role } = req.body;
 
     if (!identifier || !password) {
       return errorResponse(res, 400, 'Please enter Employee ID / Email / Name and Password');
@@ -75,6 +75,24 @@ const login = async (req, res, next) => {
 
     if (!user) {
       return errorResponse(res, 401, 'Invalid credentials. Please check your ID/Email and password.');
+    }
+
+    // Strict Role-Based Validation based on active tab selected
+    if (role && user.role !== role) {
+      if (role === 'employee' && user.role === 'admin') {
+        return errorResponse(
+          res,
+          403,
+          'This account is an Administrator account. Please switch to the Administrator Login tab to sign in.'
+        );
+      }
+      if (role === 'admin' && user.role === 'employee') {
+        return errorResponse(
+          res,
+          403,
+          'This account is an Employee account. Please switch to the Employee Login tab to sign in.'
+        );
+      }
     }
 
     // Check Account Lockout status
