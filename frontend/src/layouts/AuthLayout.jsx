@@ -42,18 +42,20 @@ const AuthLayout = () => {
             <p className="text-xs font-semibold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
               Enterprise HR Management System
             </p>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 italic">
-              "Smart Leave Management for Modern Workplaces"
-            </p>
           </div>
 
           <Outlet />
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="z-10 py-3 text-center text-xs text-slate-400 font-medium border-t border-slate-800/60 bg-slate-950/60 backdrop-blur-sm">
-        &copy; {new Date().getFullYear()} LeaveEase Technologies Pvt. Ltd. &bull; Version 2.0
+      {/* Centered Clean Footer */}
+      <footer className="z-10 py-4 px-6 text-center border-t border-slate-800/60 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center">
+        <Link to="/" className="flex items-center justify-center gap-2.5 group cursor-pointer">
+          <img src="/logo.png" alt="LeaveEase" className="w-7 h-7 object-contain drop-shadow-md group-hover:scale-105 transition-transform" />
+          <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-brand-300 to-brand-400 bg-clip-text text-transparent">
+            leaveease
+          </span>
+        </Link>
       </footer>
     </div>
   );

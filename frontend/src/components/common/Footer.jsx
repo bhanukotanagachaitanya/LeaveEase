@@ -2,13 +2,13 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="py-4 px-6 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400 font-medium bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
-      <p>
-        &copy; {new Date().getFullYear()} LeaveEase Technologies Pvt. Ltd. &bull; Enterprise Leave Management System &bull; <span className="font-bold text-brand-600 dark:text-brand-400">v2.0</span>
-      </p>
-      <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">
-        "Smart Leave Management for Modern Workplaces"
-      </p>
+    <footer className="py-4 px-6 border-t border-slate-200/80 dark:border-slate-800/80 text-center bg-white/50 dark:bg-slate-900/50 backdrop-blur-md flex flex-col items-center justify-center">
+      <a href="/" className="flex items-center justify-center gap-2.5 group cursor-pointer">
+        <img src="/logo.png" alt="LeaveEase" className="w-7 h-7 object-contain drop-shadow-md group-hover:scale-105 transition-transform" />
+        <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-slate-900 via-brand-800 to-brand-600 dark:from-white dark:via-brand-300 dark:to-brand-400 bg-clip-text text-transparent">
+          leaveease
+        </span>
+      </a>
     </footer>
   );
 };
