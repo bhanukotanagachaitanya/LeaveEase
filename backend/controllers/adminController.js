@@ -310,6 +310,20 @@ const deleteEmployee = async (req, res, next) => {
   }
 };
 
+/**
+ * @desc    Get password audit logs for security oversight
+ * @route   GET /api/admin/password-audits
+ * @access  Private (Admin)
+ */
+const getPasswordAudits = async (req, res, next) => {
+  try {
+    const audits = await PasswordAudit.find().sort({ createdAt: -1 }).limit(100);
+    return successResponse(res, 200, 'Password audit logs retrieved', { audits });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getDashboardStats,
   getAllEmployees,
@@ -317,5 +331,6 @@ module.exports = {
   updateEmployee,
   toggleEmployeeStatus,
   resetEmployeePassword,
-  deleteEmployee
+  deleteEmployee,
+  getPasswordAudits
 };
