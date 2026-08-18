@@ -4,6 +4,20 @@ This guide provides step-by-step instructions to deploy the **LeaveEase MERN Sta
 
 ---
 
+## 📁 Repository Structure Overview
+
+```
+EmployeeLeaveSystem/
+├── backend/          # Node.js + Express + MongoDB REST API backend
+├── frontend/         # React + Vite + Tailwind CSS frontend application
+├── .gitignore        # Git ignore rules for root, frontend, and backend
+├── DEPLOYMENT.md     # Deployment guide & server setup documentation
+├── package.json      # Monorepo scripts for building & starting services
+└── vercel.json       # Production Vercel single-page application configuration
+```
+
+---
+
 ## 1. 🗄️ Database Setup (MongoDB Atlas)
 
 1. Create a free cluster on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
@@ -22,7 +36,7 @@ This guide provides step-by-step instructions to deploy the **LeaveEase MERN Sta
 1. Sign up on [Render.com](https://render.com) and click **New +** -> **Web Service**.
 2. Connect your GitHub repository `https://github.com/bhanukotanagachaitanya/LeaveEase`.
 3. Set the following parameters:
-   - **Root Directory**: `server`
+   - **Root Directory**: `backend`
    - **Build Command**: `npm install`
    - **Start Command**: `node server.js`
 4. Add the following **Environment Variables**:
@@ -41,24 +55,12 @@ This guide provides step-by-step instructions to deploy the **LeaveEase MERN Sta
 2. Import your GitHub repository `bhanukotanagachaitanya/LeaveEase`.
 3. Configure project settings:
    - **Framework Preset**: `Vite`
-   - **Root Directory**: `./` (or `client`)
-   - **Build Command**: `cd client && npm run build`
-   - **Output Directory**: `client/dist`
+   - **Root Directory**: `./` (or `frontend`)
+   - **Build Command**: `cd frontend && npm run build`
+   - **Output Directory**: `frontend/dist`
 4. Under **Environment Variables**, add:
    - `VITE_API_BASE_URL`: `https://<your-render-app>.onrender.com/api`
 5. Click **Deploy**. Vercel will build and publish your application!
-
----
-
-## 📋 Pre-Configured Files Included in Repository
-
-- **Root `.gitignore`**: Excludes `node_modules`, `.env`, `dist`, logs.
-- **Client `.gitignore`**: Excludes Vite build outputs and secrets.
-- **Server `.gitignore`**: Excludes server dependencies and secrets.
-- **Root `vercel.json`**: Vercel SPA rewrite routing rules.
-- **Server `Procfile`**: Node.js web process execution command.
-- **Server `render.yaml`**: Infrastructure-as-code configuration for Render.
-- **Server `config/seed.js`**: Database seed script for default Administrator (`ADM001` / `admin@company.com` / `Admin@123`).
 
 ---
 

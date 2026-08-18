@@ -2,18 +2,18 @@
   "name": "employee-leave-management-system",
   "version": "2.0.0",
   "description": "LeaveEase Enterprise Employee Leave Management System (MERN Stack)",
-  "main": "server/server.js",
+  "main": "backend/server.js",
   "scripts": {
-    "start": "cd server && node server.js",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "dev:server": "cd server && npm run dev",
-    "dev:client": "cd client && npm run dev",
-    "server": "cd server && npm run dev",
-    "client": "cd client && npm run dev",
-    "seed": "cd server && npm run seed",
-    "build": "cd client && npm run build",
-    "postinstall": "cd server && npm install && cd ../client && npm install",
-    "push": "git add . && git commit -m \"Update deployment files and project codebase\" && git push origin main"
+    "start": "cd backend && node server.js",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "seed": "cd backend && npm run seed",
+    "build": "cd frontend && npm run build",
+    "postinstall": "cd backend && npm install && cd ../frontend && npm install",
+    "push": "git add . && git commit -m \"Update project structure with frontend and backend folders\" && git push origin main"
   },
   "devDependencies": {
     "concurrently": "^9.0.0"
