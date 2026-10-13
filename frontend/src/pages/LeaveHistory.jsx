@@ -102,7 +102,7 @@ const LeaveHistory = () => {
       </div>
 
       {/* Filter Tabs & Search Bar */}
-      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-4 border border-slate-200/80 dark:border-slate-800/80 shadow-subtle space-y-4">
+      <div className="glass-card rounded-2xl p-4 space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           {/* Tabs */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
@@ -143,7 +143,7 @@ const LeaveHistory = () => {
       </div>
 
       {/* Main Table View */}
-      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-200/80 dark:border-slate-800/80 shadow-subtle overflow-hidden">
+      <div className="glass-card rounded-2xl overflow-hidden">
         {loading ? (
           <LoadingSpinner message="Fetching leave history records..." />
         ) : !leaveRequests || leaveRequests.length === 0 ? (

@@ -50,5 +50,10 @@ const leaveRequestSchema = new mongoose.Schema(
   }
 );
 
+// Performance Compound Indexes
+leaveRequestSchema.index({ employeeId: 1, status: 1 });
+leaveRequestSchema.index({ fromDate: 1, toDate: 1 });
+leaveRequestSchema.index({ status: 1, createdAt: -1 });
+
 const LeaveRequest = mongoose.model('LeaveRequest', leaveRequestSchema);
 module.exports = LeaveRequest;

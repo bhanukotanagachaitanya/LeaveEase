@@ -28,12 +28,12 @@ const StatCard = ({ title, value, icon: Icon, color = 'blue', subtitle, to }) =>
   const selectedColor = colorMap[color] || colorMap.blue;
 
   const cardContent = (
-    <div className={`p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex items-start justify-between transition-all duration-200 ${to ? 'hover:shadow-md hover:-translate-y-0.5 cursor-pointer' : ''}`}>
+    <div className={`p-6 rounded-2xl glass-card flex items-start justify-between transition-all duration-200 group ${to ? 'hover:shadow-lg hover:-translate-y-0.5 cursor-pointer' : ''}`}>
       <div className="space-y-1">
         <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           {title}
         </span>
-        <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white">
+        <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           {value !== undefined && value !== null ? value : 0}
         </h3>
         {subtitle && (
@@ -43,7 +43,7 @@ const StatCard = ({ title, value, icon: Icon, color = 'blue', subtitle, to }) =>
         )}
       </div>
 
-      <div className={`p-3.5 rounded-2xl border ${selectedColor.bg}`}>
+      <div className={`p-3.5 rounded-xl border backdrop-blur-md transition-transform duration-200 group-hover:scale-105 ${selectedColor.bg}`}>
         <Icon className="w-6 h-6" />
       </div>
     </div>

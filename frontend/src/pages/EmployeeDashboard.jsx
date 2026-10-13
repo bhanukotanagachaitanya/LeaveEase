@@ -76,7 +76,7 @@ const EmployeeDashboard = () => {
               <Sparkles className="w-8 h-8 text-white" />
             </div>
             <div>
-              <span className="px-3 py-0.5 rounded-full bg-white/20 text-xs font-bold uppercase tracking-wider text-white">
+              <span className="px-2.5 py-0.5 rounded-md bg-white/20 text-xs font-bold uppercase tracking-wider text-white">
                 Holiday Announcement
               </span>
               <h2 className="text-2xl font-extrabold mt-1">Today is a Holiday: {todayHoliday.name}!</h2>
@@ -91,7 +91,7 @@ const EmployeeDashboard = () => {
       {/* Welcome Banner */}
       <div className="bg-gradient-to-r from-brand-800 via-brand-700 to-blue-600 rounded-3xl p-6 lg:p-8 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="z-10 space-y-2 max-w-xl">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-semibold backdrop-blur-sm">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/10 text-white/90 text-xs font-semibold backdrop-blur-sm">
             <UserCheck className="w-3.5 h-3.5" /> LeaveEase Employee Portal
           </span>
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
@@ -157,8 +157,8 @@ const EmployeeDashboard = () => {
       {/* Grid Row: Upcoming Holidays & Recent Notifications */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Upcoming Holidays Widget */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-subtle p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div className="lg:col-span-2 glass-card rounded-2xl p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-3">
             <div className="flex items-center gap-2">
               <CalendarDays className="w-5 h-5 text-brand-600" />
               <h3 className="text-base font-bold text-slate-800 dark:text-white">Upcoming Company Holidays</h3>
@@ -178,7 +178,7 @@ const EmployeeDashboard = () => {
               {upcomingHolidays.slice(0, 4).map((h) => (
                 <div
                   key={h._id}
-                  className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/60 dark:border-slate-700 flex items-start justify-between"
+                  className="p-3.5 bg-slate-50/80 dark:bg-slate-800/60 rounded-xl border border-slate-200/60 dark:border-slate-700 flex items-start justify-between"
                 >
                   <div>
                     <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300">
@@ -197,8 +197,8 @@ const EmployeeDashboard = () => {
         </div>
 
         {/* Notifications Widget */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-subtle p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div className="glass-card rounded-2xl p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-3">
             <div className="flex items-center gap-2">
               <Bell className="w-5 h-5 text-brand-600" />
               <h3 className="text-base font-bold text-slate-800 dark:text-white">Recent Notifications</h3>
@@ -210,7 +210,7 @@ const EmployeeDashboard = () => {
               <p className="text-xs text-slate-400 text-center py-4">No recent notifications.</p>
             ) : (
               notifications.slice(0, 4).map((n) => (
-                <div key={n._id} className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 space-y-1">
+                <div key={n._id} className="p-3 bg-slate-50/80 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-900 dark:text-white">{n.title}</span>
                     <span className="text-[10px] text-slate-400">{formatDate(n.createdAt)}</span>
@@ -224,8 +224,8 @@ const EmployeeDashboard = () => {
       </div>
 
       {/* Recent Leave Applications Table */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-subtle overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+      <div className="glass-card rounded-2xl overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
           <div>
             <h3 className="text-base font-bold text-slate-800 dark:text-white">Recent Leave Applications</h3>
             <p className="text-xs text-slate-500">Your latest submitted requests</p>

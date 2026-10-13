@@ -12,66 +12,50 @@
   }
 }
 
-/* Modern Glossy Glassmorphism Utilities & Special Visual Effects */
+/* Modern High-End Enterprise Glassmorphism Utilities */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  box-shadow: 0 10px 40px -10px rgba(31, 38, 135, 0.1), inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 12px 40px -10px rgba(15, 23, 42, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.95);
 }
 
 .dark .glass-panel {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 45px -10px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
 }
 
 .glass-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.85) 100%);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.06), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(248, 250, 252, 0.75) 100%);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
 }
 
 .dark .glass-card {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.85) 100%);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(51, 65, 85, 0.6);
-  box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.8) 100%);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 14px 38px -8px rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
 }
 
-/* Light Glossy Special High-Look Hero & Radial Light Effects */
+/* Enterprise Hero & Subtle Background Accents */
 .glossy-hero {
-  background: radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.18), transparent 70%),
-              radial-gradient(circle at 85% 50%, rgba(16, 185, 129, 0.14), transparent 50%),
-              radial-gradient(circle at 15% 75%, rgba(139, 92, 246, 0.12), transparent 50%);
+  background: radial-gradient(circle at 50% -20%, rgba(37, 99, 235, 0.08), transparent 70%),
+              radial-gradient(circle at 85% 50%, rgba(16, 185, 129, 0.06), transparent 50%),
+              radial-gradient(circle at 15% 75%, rgba(59, 130, 246, 0.06), transparent 50%);
 }
 
 .dark .glossy-hero {
-  background: radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.28), transparent 70%),
-              radial-gradient(circle at 85% 50%, rgba(16, 185, 129, 0.2), transparent 50%),
-              radial-gradient(circle at 15% 75%, rgba(139, 92, 246, 0.22), transparent 50%);
-}
-
-.glossy-pill {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(226, 232, 240, 0.85);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
-}
-
-.dark .glossy-pill {
-  background: rgba(30, 41, 59, 0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(51, 65, 85, 0.85);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  background: radial-gradient(circle at 50% -20%, rgba(37, 99, 235, 0.15), transparent 70%),
+              radial-gradient(circle at 85% 50%, rgba(16, 185, 129, 0.1), transparent 50%),
+              radial-gradient(circle at 15% 75%, rgba(59, 130, 246, 0.1), transparent 50%);
 }
 
 /* Glowing Border Accent */

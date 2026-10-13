@@ -12,7 +12,6 @@ import {
   KeyRound,
   BarChart3,
   Megaphone,
-  Key,
   LogOut,
   X
 } from 'lucide-react';
@@ -32,7 +31,6 @@ const Sidebar = ({ isOpen, onClose }) => {
     { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
     { name: 'Leave Requests', path: '/admin/leaves', icon: FileCheck2 },
     { name: 'Employee Directory', path: '/admin/employees', icon: Users },
-    { name: 'Password Requests', path: '/admin/password-requests', icon: Key },
     { name: 'Holiday Management', path: '/admin/holidays', icon: CalendarDays },
     { name: 'Company Announcements', path: '/admin/announcements', icon: Megaphone },
     { name: 'Password Audit Logs', path: '/admin/password-audit', icon: KeyRound },

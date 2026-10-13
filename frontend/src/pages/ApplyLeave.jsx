@@ -214,7 +214,7 @@ const ApplyLeave = () => {
               </p>
             </div>
           </div>
-          <span className="text-xs font-semibold text-brand-700 bg-brand-50 px-3 py-1 rounded-full border border-brand-200">
+          <span className="text-xs font-semibold text-brand-700 bg-brand-50 px-2.5 py-1 rounded-md border border-brand-200">
             Auto-Calculated
           </span>
         </div>

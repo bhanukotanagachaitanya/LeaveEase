@@ -56,18 +56,20 @@ const login = async (req, res, next) => {
   try {
     const { identifier, password, role } = req.body;
 
-    if (!identifier || !password) {
+    if (!identifier || !password || typeof identifier !== 'string' || typeof password !== 'string') {
       return errorResponse(res, 400, 'Please enter Employee ID / Email / Name and Password');
     }
 
     const trimmedIdentifier = identifier.trim();
+    // Escape regex characters to prevent ReDoS / injection
+    const escapedIdentifier = trimmedIdentifier.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
     // Flexible identifier search matching employeeId, email, or name
     const query = {
       $or: [
         { employeeId: trimmedIdentifier.toUpperCase() },
         { email: trimmedIdentifier.toLowerCase() },
-        { name: { $regex: `^${trimmedIdentifier}$`, $options: 'i' } }
+        { name: { $regex: `^${escapedIdentifier}$`, $options: 'i' } }
       ]
     };
 

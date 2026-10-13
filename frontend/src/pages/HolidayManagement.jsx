@@ -124,7 +124,7 @@ const HolidayManagement = () => {
               <Sparkles className="w-8 h-8 text-white" />
             </div>
             <div>
-              <span className="px-3 py-0.5 rounded-full bg-white/20 text-xs font-bold uppercase tracking-wider text-white">
+              <span className="px-2.5 py-0.5 rounded-md bg-white/20 text-xs font-bold uppercase tracking-wider text-white">
                 Holiday Alert Today
               </span>
               <h2 className="text-2xl font-extrabold mt-1">Today is a Holiday: {todayHoliday.name}!</h2>
@@ -237,7 +237,7 @@ const HolidayManagement = () => {
                       {formatDate(h.date)}
                     </td>
                     <td className="py-4 px-6">
-                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                      <span className="px-2.5 py-0.5 rounded-md text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
                         {h.type}
                       </span>
                     </td>

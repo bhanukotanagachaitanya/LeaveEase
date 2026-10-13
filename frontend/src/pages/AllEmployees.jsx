@@ -338,7 +338,7 @@ const AllEmployees = () => {
                       <td className="py-4 px-6">
                         <button
                           onClick={() => handleToggleStatus(emp)}
-                          className={`px-2.5 py-0.5 rounded-full text-xs font-bold border transition-colors ${
+                          className={`px-2.5 py-0.5 rounded-md text-xs font-bold border transition-colors ${
                             emp.isActive
                               ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                               : 'bg-rose-50 text-rose-700 border-rose-200'
@@ -351,7 +351,7 @@ const AllEmployees = () => {
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => handleResetOpen(emp)}
-                            className="p-1.5 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                            className="p-1.5 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 rounded-lg transition-colors"
                             title="Reset Password"
                           >
                             <Key className="w-4 h-4" />
@@ -573,7 +573,7 @@ const AllEmployees = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md disabled:opacity-50"
+              className="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow-md disabled:opacity-50"
             >
               {submitting ? 'Updating...' : 'Set Password'}
             </button>

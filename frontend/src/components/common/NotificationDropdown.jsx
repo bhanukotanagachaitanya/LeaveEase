@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { getUserNotifications, markNotificationAsRead } from '../../services/notificationService';
-import { Bell, Check, Sparkles, Calendar, Key, AlertCircle, ExternalLink } from 'lucide-react';
+import { Bell, Check, Sparkles, Calendar, Key, AlertCircle, ExternalLink, UserCheck } from 'lucide-react';
 import { formatDate } from '../../utils/dateUtils';
 
 const NotificationDropdown = () => {
@@ -48,7 +48,7 @@ const NotificationDropdown = () => {
         navigate(isAdmin ? '/admin/leaves' : '/leave-history');
         break;
       case 'Password':
-        navigate(isAdmin ? '/admin/password-requests' : '/profile');
+        navigate('/profile');
         break;
       case 'Holiday':
         navigate(isAdmin ? '/admin/holidays' : '/holidays');
@@ -72,7 +72,10 @@ const NotificationDropdown = () => {
       case 'Leave':
         return <Calendar className="w-4 h-4 text-brand-600" />;
       case 'Password':
-        return <Key className="w-4 h-4 text-purple-600" />;
+        return <Key className="w-4 h-4 text-slate-600 dark:text-slate-300" />;
+      case 'Account':
+      case 'Employee':
+        return <UserCheck className="w-4 h-4 text-emerald-500" />;
       default:
         return <AlertCircle className="w-4 h-4 text-blue-500" />;
     }
@@ -101,7 +104,7 @@ const NotificationDropdown = () => {
                 Notifications
               </h3>
               {unreadCount > 0 && (
-                <span className="px-2 py-0.5 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 text-[10px] font-bold">
+                <span className="px-2 py-0.5 rounded-md bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 text-[10px] font-bold">
                   {unreadCount} Unread
                 </span>
               )}

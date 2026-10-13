@@ -11,10 +11,10 @@ import AdminRoute from './AdminRoute';
 
 // Pages
 import HomePage from '../pages/HomePage';
+import PrivacyPolicy from '../pages/PrivacyPolicy';
+import TermsAndConditions from '../pages/TermsAndConditions';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
-import ForgotPasswordRequest from '../pages/ForgotPasswordRequest';
-import CompletePasswordReset from '../pages/CompletePasswordReset';
 
 import EmployeeDashboard from '../pages/EmployeeDashboard';
 import ApplyLeave from '../pages/ApplyLeave';
@@ -25,7 +25,6 @@ import HolidayManagement from '../pages/HolidayManagement';
 import AdminDashboard from '../pages/AdminDashboard';
 import AllLeaveRequests from '../pages/AllLeaveRequests';
 import AllEmployees from '../pages/AllEmployees';
-import PasswordResetRequests from '../pages/PasswordResetRequests';
 import AnnouncementManagement from '../pages/AnnouncementManagement';
 import PasswordAuditLogs from '../pages/PasswordAuditLogs';
 import Reports from '../pages/Reports';
@@ -36,12 +35,16 @@ const AppRoutes = () => {
       {/* Public Interactive Landing Home Page */}
       <Route path="/" element={<HomePage />} />
 
+      {/* Public Compliance & Legal Pages */}
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/terms" element={<TermsAndConditions />} />
+      <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+
       {/* Public Auth Routes */}
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPasswordRequest />} />
-        <Route path="/complete-reset" element={<CompletePasswordReset />} />
         <Route path="/setup-admin" element={<Navigate to="/login" replace />} />
       </Route>
 
@@ -59,7 +62,6 @@ const AppRoutes = () => {
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/leaves" element={<AllLeaveRequests />} />
             <Route path="/admin/employees" element={<AllEmployees />} />
-            <Route path="/admin/password-requests" element={<PasswordResetRequests />} />
             <Route path="/admin/holidays" element={<HolidayManagement />} />
             <Route path="/admin/announcements" element={<AnnouncementManagement />} />
             <Route path="/admin/password-audit" element={<PasswordAuditLogs />} />

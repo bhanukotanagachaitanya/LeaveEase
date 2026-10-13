@@ -2,114 +2,122 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ThemeToggle from '../components/common/ThemeToggle';
+import Footer from '../components/common/Footer';
 import {
   CalendarPlus,
   ShieldCheck,
-  Zap,
   Users,
-  KeyRound,
   BarChart3,
+  Calendar,
+  Lock,
   ArrowRight,
   Menu,
-  X
+  X,
+  CheckCircle2
 } from 'lucide-react';
 
 const HomePage = () => {
   const { isAuthenticated, isAdmin } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const scrollToTop = (e) => {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   const features = [
     {
       icon: CalendarPlus,
-      title: 'Seamless Leave Applications',
-      description: 'Employees can apply for Casual, Sick, Annual, and Unpaid leaves in seconds with instant date validation.',
-      color: 'from-blue-500 to-cyan-400'
+      title: 'Leave Request Processing',
+      description: 'Submit Casual, Sick, Annual, and Unpaid leave requests with immediate duration calculations and policy validation.'
     },
     {
       icon: ShieldCheck,
-      title: 'Administrator Decision Center',
-      description: 'One-click leave approvals and rejections with custom admin remarks and instant status feedback.',
-      color: 'from-emerald-500 to-teal-400'
+      title: 'Manager Approval Center',
+      description: 'Review pending department leave submissions with one-click approvals, rejections, and required review remarks.'
     },
     {
-      icon: KeyRound,
-      title: 'Transparent Password Access',
-      description: 'Admins can view assigned employee passwords with an eye toggle and copy credentials securely.',
-      color: 'from-purple-500 to-indigo-400'
+      icon: Calendar,
+      title: 'Company Holiday Calendars',
+      description: 'Publish and distribute statutory and company-specific holidays across all departments in a single shared schedule.'
     },
     {
-      icon: BarChart3,
-      title: 'Leave Analytics & CSV Reports',
-      description: 'Real-time organization metrics, approval rates, category breakdowns, and one-click CSV report downloads.',
-      color: 'from-amber-500 to-orange-400'
+      icon: Lock,
+      title: 'Role-Based Access & Security',
+      description: 'Stateless JWT authentication with bcrypt password encryption, department boundaries, and comprehensive audit logs.'
     },
     {
       icon: Users,
-      title: 'Clean Employee Management',
-      description: 'Zero sample bloat. Add staff members, toggle active/inactive status, and issue instant password resets.',
-      color: 'from-rose-500 to-pink-400'
+      title: 'Employee Directory Management',
+      description: 'Maintain accurate personnel profiles, department assignments, and active employment statuses.'
     },
     {
-      icon: Zap,
-      title: 'Instant Real-time Notifications',
-      description: 'Automatic notifications for leave approvals, rejections, password updates, and company announcements.',
-      color: 'from-indigo-500 to-blue-400'
+      icon: BarChart3,
+      title: 'Auditing & CSV Reporting',
+      description: 'Generate organizational leave metrics, department breakdowns, and export records for payroll reconciliation.'
     }
   ];
 
+  const highlights = [
+    'Automated leave quota tracking and balance deductions',
+    'Real-time in-app notifications on approval decisions',
+    'Security audit trail for credential modifications',
+    'Responsive interface for desktop and tablet displays'
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 glossy-hero selection:bg-brand-500 selection:text-white transition-colors duration-200">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-150">
       {/* Navbar */}
-      <header className="sticky top-0 z-50 glass-panel border-b border-white/60 dark:border-slate-800/80 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-subtle">
-        {/* Clickable Brand Logo - Scrolls Back to Top of Home Page */}
-        <a
-          href="/"
-          onClick={scrollToTop}
-          className="flex items-center gap-3 cursor-pointer group"
-        >
+      <header className="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 sm:px-8 py-3.5 flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-3 group">
           <img
             src="/logo.png"
             alt="LeaveEase Logo"
-            className="w-10 h-10 object-contain drop-shadow-md rounded-xl group-hover:scale-105 transition-transform"
+            className="w-9 h-9 object-contain"
           />
           <div>
-            <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-slate-900 via-brand-800 to-brand-600 dark:from-white dark:via-brand-300 dark:to-brand-400 bg-clip-text text-transparent group-hover:text-brand-600 transition-colors">
+            <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white">
               LeaveEase
             </span>
-            <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest block -mt-1">
+            <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block -mt-1">
               Enterprise HRMS
             </span>
           </div>
-        </a>
+        </Link>
 
-        {/* Desktop Links & CTAs */}
-        <div className="hidden md:flex items-center gap-4">
-          <a href="#features" className="text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
-            Features
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-5">
+          <a
+            href="#features"
+            className="text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+          >
+            Capabilities
           </a>
+          <Link
+            to="/privacy"
+            className="text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+          >
+            Privacy
+          </Link>
+          <Link
+            to="/terms"
+            className="text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+          >
+            Terms
+          </Link>
 
-          <div className="h-5 w-px bg-slate-200 dark:bg-slate-800 mx-1"></div>
+          <div className="h-4 w-px bg-slate-200 dark:bg-slate-800"></div>
 
           <ThemeToggle />
 
           {isAuthenticated ? (
             <Link
               to={isAdmin ? '/admin/dashboard' : '/dashboard'}
-              className="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow-md transition-all flex items-center gap-1.5"
+              className="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-sm"
             >
-              Go to Dashboard <ArrowRight className="w-3.5 h-3.5" />
+              Open Dashboard <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           ) : (
             <Link
               to="/login"
-              className="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow-md transition-all flex items-center gap-1.5"
+              className="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-sm"
             >
-              Sign In <ArrowRight className="w-3.5 h-3.5" />
+              Sign In to Portal <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           )}
         </div>
@@ -119,36 +127,51 @@ const HomePage = () => {
           <ThemeToggle />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none"
+            className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none"
+            aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </header>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden glass-panel border-b border-slate-200 dark:border-slate-800 px-6 py-4 space-y-3 z-40 animate-fade-in">
+        <div className="md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-4 space-y-3 z-40">
           <a
             href="#features"
             onClick={() => setMobileMenuOpen(false)}
             className="block text-xs font-semibold text-slate-700 dark:text-slate-300 py-1"
           >
-            Features
+            Capabilities
           </a>
+          <Link
+            to="/privacy"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-xs font-semibold text-slate-700 dark:text-slate-300 py-1"
+          >
+            Privacy Policy
+          </Link>
+          <Link
+            to="/terms"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-xs font-semibold text-slate-700 dark:text-slate-300 py-1"
+          >
+            Terms & Conditions
+          </Link>
 
           <div className="border-t border-slate-200 dark:border-slate-800 pt-3">
             {isAuthenticated ? (
               <Link
                 to={isAdmin ? '/admin/dashboard' : '/dashboard'}
-                className="w-full py-2.5 rounded-xl bg-brand-600 text-white text-center text-xs font-bold shadow-md block"
+                className="w-full py-2.5 rounded-lg bg-brand-600 text-white text-center text-xs font-semibold block shadow-sm"
               >
-                Go to Dashboard
+                Open Dashboard
               </Link>
             ) : (
               <Link
                 to="/login"
-                className="w-full py-2.5 rounded-xl bg-brand-600 text-white text-center text-xs font-bold shadow-md block"
+                className="w-full py-2.5 rounded-lg bg-brand-600 text-white text-center text-xs font-semibold block shadow-sm"
               >
                 Sign In to Portal
               </Link>
@@ -158,68 +181,82 @@ const HomePage = () => {
       )}
 
       {/* Hero Section */}
-      <section className="relative px-4 sm:px-8 pt-16 pb-16 max-w-6xl mx-auto text-center space-y-8">
-        <div className="space-y-4 max-w-4xl mx-auto">
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-slate-900 dark:text-white">
-            Leave Management Made{' '}
-            <span className="bg-gradient-to-r from-brand-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent">
-              Effortless & Transparent
-            </span>
-          </h1>
+      <section className="px-4 sm:px-8 pt-16 pb-14 max-w-5xl mx-auto text-center space-y-6">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <ShieldCheck className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
+          Enterprise Leave Management System
         </div>
 
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white max-w-3xl mx-auto leading-tight">
+          Streamline Employee Leave Requests and Approvals
+        </h1>
+
+        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          A dedicated portal for staff to submit time-off requests, department supervisors to process approvals, and administrators to track company holiday schedules and leave balances.
+        </p>
+
+        {/* CTAs */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
           {isAuthenticated ? (
             <Link
               to={isAdmin ? '/admin/dashboard' : '/dashboard'}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-extrabold shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-6 py-3 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2 shadow-sm"
             >
-              Open Workspace Portal <ArrowRight className="w-4 h-4" />
+              Access Workspace <ArrowRight className="w-4 h-4" />
             </Link>
           ) : (
             <>
               <Link
                 to="/login"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-extrabold shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-6 py-3 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2 shadow-sm"
               >
                 Sign In to Portal <ArrowRight className="w-4 h-4" />
               </Link>
               <a
                 href="#features"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl glass-card hover:bg-white dark:hover:bg-slate-800 text-slate-800 dark:text-white text-sm font-extrabold border border-slate-300 dark:border-slate-700 shadow-md transition-all flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-6 py-3 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-sm font-semibold border border-slate-300 dark:border-slate-700 transition-colors flex items-center justify-center gap-2"
               >
-                Explore Features
+                Review Capabilities
               </a>
             </>
           )}
         </div>
+
+        {/* Feature Checklist */}
+        <div className="pt-6 border-t border-slate-200 dark:border-slate-800 max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+          {highlights.map((item, idx) => (
+            <div key={idx} className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+              <span>{item}</span>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* Feature Grid Section */}
-      <section id="features" className="px-4 sm:px-8 py-12 max-w-6xl mx-auto space-y-10">
+      <section id="features" className="px-4 sm:px-8 py-14 max-w-6xl mx-auto space-y-10">
         <div className="text-center space-y-2">
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
-            Designed for Modern Workplaces
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+            Core Administrative Capabilities
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
-            Everything your HR department and employees need for zero-friction leave management
+            Standardized tools engineered for accurate attendance administration and audit compliance
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {features.map((feat, idx) => {
             const Icon = feat.icon;
             return (
               <div
                 key={idx}
-                className="glass-card rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800/80 shadow-subtle space-y-4 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                className="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3"
               >
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${feat.color} text-white flex items-center justify-center shadow-md`}>
-                  <Icon className="w-6 h-6" />
+                <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-brand-600 dark:text-brand-400 flex items-center justify-center">
+                  <Icon className="w-5 h-5" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">{feat.title}</h3>
-                <p className="text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">{feat.title}</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
                   {feat.description}
                 </p>
               </div>
@@ -228,15 +265,10 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Centered Clean Footer */}
-      <footer className="glass-panel border-t border-white/60 dark:border-slate-800/80 px-4 sm:px-8 py-10 mt-16 flex flex-col items-center justify-center text-center">
-        <a href="/" onClick={scrollToTop} className="flex items-center justify-center gap-3 cursor-pointer group">
-          <img src="/logo.png" alt="LeaveEase" className="w-8 h-8 object-contain drop-shadow-md group-hover:scale-105 transition-transform" />
-          <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-slate-900 via-brand-800 to-brand-600 dark:from-white dark:via-brand-300 dark:to-brand-400 bg-clip-text text-transparent">
-            leaveease
-          </span>
-        </a>
-      </footer>
+      {/* Footer */}
+      <div className="mt-auto">
+        <Footer />
+      </div>
     </div>
   );
 };

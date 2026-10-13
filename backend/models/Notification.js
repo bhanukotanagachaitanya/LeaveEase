@@ -19,7 +19,7 @@ const notificationSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['Leave', 'Holiday', 'Password', 'System', 'Employee'],
+      enum: ['Leave', 'Holiday', 'Password', 'System', 'Employee', 'Account', 'employee', 'account'],
       default: 'System'
     },
     isRead: {

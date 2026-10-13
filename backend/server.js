@@ -14,8 +14,8 @@ const startServer = async () => {
 
     app.listen(PORT, () => {
       console.log(`=======================================================`);
-      console.log(`🚀 Employee Leave Management Server running on port ${PORT}`);
-      console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`[LeaveEase Server] running on port ${PORT}`);
+      console.log(`[Environment]: ${process.env.NODE_ENV || 'development'}`);
       console.log(`=======================================================`);
     });
   } catch (error) {

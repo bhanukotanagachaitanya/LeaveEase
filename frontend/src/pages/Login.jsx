@@ -130,7 +130,7 @@ const Login = () => {
               <p className="font-bold text-white">{holidayWidget.nextUpcoming.name}</p>
             </div>
             <div className="text-right">
-              <span className="px-2.5 py-1 rounded-full bg-brand-600/30 border border-brand-400 text-brand-300 text-xs font-bold">
+              <span className="px-2.5 py-1 rounded-md bg-brand-600/30 border border-brand-400 text-brand-300 text-xs font-bold">
                 {holidayWidget.nextUpcoming.daysRemaining || 0} Days Remaining
               </span>
             </div>
@@ -158,7 +158,7 @@ const Login = () => {
           onClick={() => setActiveTab('admin')}
           className={`py-2 px-3 rounded-xl text-xs font-bold transition-all ${
             activeTab === 'admin'
-              ? 'bg-white dark:bg-slate-900 text-purple-700 dark:text-purple-400 shadow-xs'
+              ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
               : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-300'
           }`}
         >
@@ -185,16 +185,10 @@ const Login = () => {
         </div>
 
         <div>
-          <div className="flex items-center justify-between mb-1.5">
+          <div className="mb-1.5">
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
               Password *
             </label>
-            <Link
-              to="/forgot-password"
-              className="text-xs font-bold text-brand-600 hover:text-brand-700 dark:text-brand-400"
-            >
-              Forgot Password?
-            </Link>
           </div>
           <div className="relative">
             <input
@@ -233,7 +227,7 @@ const Login = () => {
           disabled={loading || loginSuccessOverlay}
           className={`w-full py-3 px-4 ${
             activeTab === 'admin'
-              ? 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-200'
+              ? 'bg-slate-900 hover:bg-slate-800 focus:ring-slate-400'
               : 'bg-brand-600 hover:bg-brand-700 focus:ring-brand-200'
           } text-white font-bold text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-2`}
         >

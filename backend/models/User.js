@@ -98,5 +98,9 @@ userSchema.methods.toJSON = function () {
   return obj;
 };
 
+// Database Performance Indexes
+userSchema.index({ role: 1, isActive: 1 });
+userSchema.index({ department: 1 });
+
 const User = mongoose.model('User', userSchema);
 module.exports = User;

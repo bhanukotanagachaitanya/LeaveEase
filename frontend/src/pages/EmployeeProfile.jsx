@@ -88,7 +88,7 @@ const EmployeeProfile = () => {
         <div className="space-y-1 text-center sm:text-left flex-1">
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
             <h2 className="text-xl font-extrabold text-slate-900">{user?.name}</h2>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-brand-50 text-brand-700 border border-brand-200 uppercase">
+            <span className="px-2.5 py-0.5 rounded-md text-xs font-bold bg-brand-50 text-brand-700 border border-brand-200 uppercase">
               {user?.role}
             </span>
           </div>

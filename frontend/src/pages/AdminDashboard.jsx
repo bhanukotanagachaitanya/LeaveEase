@@ -91,7 +91,7 @@ const AdminDashboard = () => {
       {/* Admin Header Banner */}
       <div className="bg-slate-900 rounded-3xl p-6 lg:p-8 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-800">
         <div className="space-y-1">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-600/20 text-brand-400 text-xs font-bold border border-brand-500/30">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-brand-600/20 text-brand-400 text-xs font-bold border border-brand-500/30">
             <ShieldCheck className="w-3.5 h-3.5" /> LeaveEase Admin Control Center
           </span>
           <h2 className="text-2xl font-extrabold tracking-tight">Organization Overview</h2>
@@ -157,8 +157,8 @@ const AdminDashboard = () => {
       {/* Grid Row 2: Category Bar Chart / Analytics & Password Audit Logs */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Leave Category Distribution */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-subtle p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div className="lg:col-span-2 glass-card rounded-2xl p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-3">
             <div className="flex items-center gap-2">
               <PieChart className="w-5 h-5 text-brand-600" />
               <h3 className="text-base font-bold text-slate-800 dark:text-white">Leave Distribution by Category</h3>
@@ -188,9 +188,9 @@ const AdminDashboard = () => {
                         {item.count} Applications ({percentage}%)
                       </span>
                     </div>
-                    <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                    <div className="w-full bg-slate-100 dark:bg-slate-800/80 h-2.5 rounded-md overflow-hidden">
                       <div
-                        className="bg-brand-600 h-2.5 rounded-full transition-all duration-500"
+                        className="bg-brand-600 h-2.5 rounded-md transition-all duration-500"
                         style={{ width: `${percentage}%` }}
                       ></div>
                     </div>
@@ -202,15 +202,15 @@ const AdminDashboard = () => {
         </div>
 
         {/* Password Audit Logs Preview Widget */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-subtle p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div className="glass-card rounded-2xl p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-3">
             <div className="flex items-center gap-2">
-              <KeyRound className="w-5 h-5 text-purple-600" />
+              <KeyRound className="w-5 h-5 text-brand-600" />
               <h3 className="text-base font-bold text-slate-800 dark:text-white">Password Change Activity</h3>
             </div>
             <Link
               to="/admin/password-audit"
-              className="text-xs font-bold text-purple-600 hover:text-purple-700 flex items-center gap-1"
+              className="text-xs font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1"
             >
               Audit Logs <ArrowRight className="w-3.5 h-3.5" />
             </Link>
@@ -221,7 +221,7 @@ const AdminDashboard = () => {
               <p className="text-xs text-slate-400 py-4 text-center">No password changes logged yet.</p>
             ) : (
               passwordAudits.slice(0, 4).map((audit) => (
-                <div key={audit._id} className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 space-y-1">
+                <div key={audit._id} className="p-3 bg-slate-50/80 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-900 dark:text-white">{audit.employeeName}</span>
                     <span className="text-[10px] text-slate-400 font-mono">{audit.employeeId}</span>
@@ -238,7 +238,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Pending Approvals Section */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-subtle overflow-hidden">
+      <div className="glass-card rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Clock className="w-5 h-5 text-amber-500" />

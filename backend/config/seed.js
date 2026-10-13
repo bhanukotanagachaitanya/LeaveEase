@@ -4,29 +4,27 @@ const LeaveRequest = require('../models/LeaveRequest');
 const Holiday = require('../models/Holiday');
 const Notification = require('../models/Notification');
 const PasswordAudit = require('../models/PasswordAudit');
-const PasswordResetRequest = require('../models/PasswordResetRequest');
 const Announcement = require('../models/Announcement');
 
 const seedData = async (forceClear = false) => {
   try {
     const adminCount = await User.countDocuments({ role: 'admin' });
     if (adminCount > 0 && !forceClear) {
-      console.log('ℹ️ Seed check: LeaveEase Admin account already exists.');
+      console.log('[Seed]: LeaveEase Admin account already exists.');
       return;
     }
 
     if (forceClear || adminCount === 0) {
-      console.log('🧹 Preparing clean LeaveEase database setup...');
+      console.log('[Seed]: Preparing clean LeaveEase database setup...');
       await User.deleteMany({});
       await LeaveRequest.deleteMany({});
       await Holiday.deleteMany({});
       await Notification.deleteMany({});
       await PasswordAudit.deleteMany({});
-      await PasswordResetRequest.deleteMany({});
       await Announcement.deleteMany({});
     }
 
-    console.log('🌱 Creating default Administrator account...');
+    console.log('[Seed]: Creating default Administrator account...');
 
     // Seed ONLY the Primary Administrator account (No default employees)
     const adminUser = await User.create({
@@ -69,10 +67,10 @@ const seedData = async (forceClear = false) => {
       createdBy: adminUser._id
     });
 
-    console.log('✅ LeaveEase Database Seeding Completed Successfully!');
-    console.log('🔑 Admin Credentials: ID: ADM001 | Email: admin@company.com | Password: Admin@123');
+    console.log('[Seed]: LeaveEase Database Seeding Completed Successfully.');
+    console.log('[Admin Credentials]: ID: ADM001 | Email: admin@company.com | Password: Admin@123');
   } catch (error) {
-    console.error('❌ Seeding Error:', error);
+    console.error('[Seeding Error]:', error);
   }
 };
 

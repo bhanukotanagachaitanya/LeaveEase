@@ -51,6 +51,22 @@ const applyLeave = async (req, res, next) => {
       return errorResponse(res, 400, 'End date (To Date) cannot be before start date (From Date)');
     }
 
+    // Accuracy Check: Prevent overlapping Pending or Approved leave requests
+    const overlapping = await LeaveRequest.findOne({
+      employeeId: req.user._id,
+      status: { $in: ['Pending', 'Approved'] },
+      fromDate: { $lte: endDay },
+      toDate: { $gte: startDay }
+    });
+
+    if (overlapping) {
+      return errorResponse(
+        res,
+        400,
+        `You already have a ${overlapping.status} leave application (${overlapping.leaveType}) covering overlapping dates.`
+      );
+    }
+
     const totalDays = calculateDays(startDay, endDay);
 
     // Create leave request
@@ -93,9 +109,10 @@ const getLeaveHistory = async (req, res, next) => {
     }
 
     if (search) {
+      const sanitizedSearch = String(search).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       query.$or = [
-        { leaveType: { $regex: search, $options: 'i' } },
-        { reason: { $regex: search, $options: 'i' } }
+        { leaveType: { $regex: sanitizedSearch, $options: 'i' } },
+        { reason: { $regex: sanitizedSearch, $options: 'i' } }
       ];
     }
 
@@ -110,8 +127,8 @@ const getLeaveHistory = async (req, res, next) => {
       LeaveRequest.countDocuments(query)
     ]);
 
-    // Calculate aggregated metrics for employee dashboard
-    const allUserLeaves = await LeaveRequest.find({ employeeId: req.user._id });
+    // Calculate aggregated metrics for employee dashboard efficiently
+    const allUserLeaves = await LeaveRequest.find({ employeeId: req.user._id }).select('status').lean();
     const stats = {
       totalRequests: allUserLeaves.length,
       pendingRequests: allUserLeaves.filter(l => l.status === 'Pending').length,
@@ -160,7 +177,8 @@ const getAllLeaveRequests = async (req, res, next) => {
       .populate('employeeId', 'name employeeId email department');
 
     if (search) {
-      const searchRegex = new RegExp(search, 'i');
+      const sanitized = String(search).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const searchRegex = new RegExp(sanitized, 'i');
       leaveRequests = leaveRequests.filter(l => 
         (l.employeeId && (searchRegex.test(l.employeeId.name) || searchRegex.test(l.employeeId.employeeId))) ||
         searchRegex.test(l.leaveType) ||

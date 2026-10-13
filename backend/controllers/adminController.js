@@ -147,12 +147,16 @@ const createEmployee = async (req, res, next) => {
       isActive: true
     });
 
-    await Notification.create({
-      userId: newEmployee._id,
-      title: 'Welcome to LeaveEase!',
-      message: `Your employee account (${newEmployee.employeeId}) has been initialized by HR Administrator.`,
-      type: 'Account'
-    });
+    try {
+      await Notification.create({
+        userId: newEmployee._id,
+        title: 'Welcome to LeaveEase!',
+        message: `Your employee account (${newEmployee.employeeId}) has been initialized by HR Administrator.`,
+        type: 'Account'
+      });
+    } catch (notifErr) {
+      console.error('[Notification Error on createEmployee]:', notifErr.message);
+    }
 
     return successResponse(res, 201, 'Employee created successfully!', {
       employee: newEmployee
@@ -263,7 +267,7 @@ const resetEmployeePassword = async (req, res, next) => {
       employeeName: employee.name,
       employeeId: employee.employeeId,
       ipAddress: Array.isArray(clientIp) ? clientIp[0] : clientIp,
-      changedBy: `Admin (${req.user.name})`,
+      changedBy: 'Admin',
       status: 'Success'
     });
 
@@ -317,8 +321,25 @@ const deleteEmployee = async (req, res, next) => {
  */
 const getPasswordAudits = async (req, res, next) => {
   try {
-    const audits = await PasswordAudit.find().sort({ createdAt: -1 }).limit(100);
-    return successResponse(res, 200, 'Password audit logs retrieved', { audits });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 15;
+    const skip = (page - 1) * limit;
+
+    const total = await PasswordAudit.countDocuments();
+    const audits = await PasswordAudit.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    return successResponse(res, 200, 'Password audit logs retrieved', {
+      audits,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit) || 1
+      }
+    });
   } catch (error) {
     next(error);
   }
